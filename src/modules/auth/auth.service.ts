@@ -87,7 +87,9 @@ const loginUser = async (payload: ILoginUser) => {
 }
 
 
-const getUserProfile = async () => {}
+const getUserProfile = async (accessToken: string) => {
+    
+}
 
 export const authService = {
     userRegistration,

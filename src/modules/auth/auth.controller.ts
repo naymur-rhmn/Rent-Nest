@@ -48,7 +48,9 @@ const loginUser = catchAsync(async (req, res) => {
 
 
 const getUserProfile = catchAsync(async (req, res) => {
+    const accessToken = req.cookies?.accessToken;
 
+    const user = await authService.getUserProfile(accessToken)
 })
 
 
