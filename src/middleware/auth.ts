@@ -27,7 +27,7 @@ export const auth =  (...requiredRoles: AuthRole[]) => {
             req.headers.authorization?.startsWith("Bearer ") ?
             req.headers.authorization.split(" ")[1] :
         req.headers.authorization;
-
+ 
         if(!token) {
             throw new Error ("You are not logged in. Please log in to access this resource")
         }
@@ -50,7 +50,7 @@ export const auth =  (...requiredRoles: AuthRole[]) => {
                 email, 
             }
         })
-
+ 
         if(!user) {
             throw new Error ("User not found, Please log in again")
         }
@@ -65,7 +65,7 @@ export const auth =  (...requiredRoles: AuthRole[]) => {
             role,
             status
         }
-
+ 
         next()
     })
 }

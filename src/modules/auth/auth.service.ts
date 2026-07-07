@@ -87,8 +87,21 @@ const loginUser = async (payload: ILoginUser) => {
 }
 
 
-const getUserProfile = async (accessToken: string) => {
-    
+const getUserProfile = async (userId: string) => {
+    const user = await prisma.user.findUniqueOrThrow({
+        where: {
+            id: userId 
+        },
+        omit: {
+            password: true,
+        },
+        include: {
+            properties: true,
+            rentalRequest: true
+        }
+    })
+
+    return user
 }
 
 export const authService = {

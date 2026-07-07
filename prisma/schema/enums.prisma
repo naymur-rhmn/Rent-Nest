@@ -17,5 +17,6 @@ enum RENTAL_STATUS {
 enum PropertyStatus {
     AVAILABLE
     RENTED
+    PENDING
     UNAVAILABLE
 }

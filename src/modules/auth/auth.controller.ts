@@ -48,9 +48,16 @@ const loginUser = catchAsync(async (req, res) => {
 
 
 const getUserProfile = catchAsync(async (req, res) => {
-    const accessToken = req.cookies?.accessToken;
+    const userId = req.user?.id as string
 
-    const user = await authService.getUserProfile(accessToken)
+    const user = await authService.getUserProfile(userId)
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "User Profile Retrived Successfully",
+        data: {user}
+    })
 })
 
 
