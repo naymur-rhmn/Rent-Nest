@@ -22,6 +22,7 @@ model Property {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    @@unique([landlordId, title, address], name: "unique_landlord_property")
     @@index([landlordId])
     @@index([categoryId])
     @@index([landlordId, status])

@@ -1,22 +1,33 @@
 import catchAsync from "../../utils/catchAsync";
+import { sendResponse } from "../../utils/sendResponse";
+import { landlordService } from "./landlord.service";
+import httpStatus from "http-status"
 
-const createProperty = catchAsync((req, res) => {
+const createProperty = catchAsync(async(req, res) => {
+    const id = req.user?.id
     const payload = req.body;
 
-    
+    const property = await landlordService.createProperty(payload, id as string);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.CREATED,
+        message: "Property created Successfull",
+        data: {property}
+    })
 })
 
-const updateProperty = catchAsync((req, res) => {
+const updateProperty = catchAsync(async(req, res) => {
 
 })
 
-const deleteProperty = catchAsync((req, res) => {
+const deleteProperty = catchAsync(async(req, res) => {
 
 })
-const getAllRentalRequest = catchAsync((req, res) => {
+const getAllRentalRequest = catchAsync(async(req, res) => {
 
 })
-const approveOrRejectRentalReq = catchAsync((req, res) => {
+const approveOrRejectRentalReq = catchAsync(async(req, res) => {
 
 })
 

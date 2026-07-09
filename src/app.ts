@@ -20,9 +20,9 @@ app.use(cookieParser())
 
 app.use("/api/auth", authRouter) 
 
-app.use("/api/landlord", landloardRouter)
-
 app.use("/api/categories", categoriesRouter)
+
+app.use("/api/landlord", landloardRouter)
 
 
 

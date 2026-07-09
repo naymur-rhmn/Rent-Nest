@@ -28,8 +28,7 @@ const getAllCategories = catchAsync(async(req, res) => {
     })
 }) 
 const deleteCategories = catchAsync( async(req, res) => {
-    const id = req.params?.id;
-    console.log("Delete category id:", id);
+    const id = req.params?.id; 
 
     await categoriesService.deleteCategories(id as string);
 
