@@ -5,7 +5,7 @@ import config from "../config";
 import catchAsync from "../utils/catchAsync";
 import { jwtUtils } from "../utils/jwt";
 import { prisma } from "../lib/prisma";
-type AuthRole = Role | "ADMIN";
+
 declare global {
     namespace Express {
         interface Request {
@@ -20,7 +20,7 @@ declare global {
     }
 }
 
-export const auth =  (...requiredRoles: AuthRole[]) => {
+export const auth =  (...requiredRoles: Role[]) => {
     return catchAsync( async(req, res, next) => {
         const token = req.cookies.accessToken ?
             req.cookies.accessToken :

@@ -22,5 +22,8 @@ model Property {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    @@index([landlordId])
+    @@index([categoryId])
+    @@index([landlordId, status])
     @@map("Properties")
 }

@@ -1,6 +1,6 @@
 import { Role, UserStatus } from "../../../generated/prisma/enums";
 
-export interface UPayload {
+export interface IRegisterUser {
     name: string,
     email: string,
     password: string,
@@ -12,6 +12,11 @@ export interface UPayload {
     country: string,
     state?: string,
     status: UserStatus,
+}
+
+export interface ILoginUser {
+    email: string, 
+    password: string
 }
 
 // enum Role {

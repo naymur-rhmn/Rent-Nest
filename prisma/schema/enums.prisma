@@ -1,6 +1,7 @@
 enum Role {
     LANDLORD
     TENANT
+    ADMIN
 }
 
 enum UserStatus {
@@ -11,7 +12,7 @@ enum UserStatus {
 enum RENTAL_STATUS {
     PENDING
     APPROVED
-    REJECT
+    REJECTED
 }
 
 enum PropertyStatus {

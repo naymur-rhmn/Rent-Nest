@@ -9,6 +9,8 @@ import { jwtUtils } from "../../utils/jwt";
 const userRegistration = async (payload : IRegisterUser) => {
     const {name, email, password, phone, role, occupation, age, profileImage, country, state, status } = payload;
 
+    const UPRole = role.trim().toUpperCase();
+
     const hashedPassword = await bcrypt.hash(password, Number(config.bcrypt_salt_rounds))
 
     const userExist = await prisma.user.findUnique({
@@ -25,7 +27,9 @@ const userRegistration = async (payload : IRegisterUser) => {
             email,
             password : hashedPassword,
             phone,
-            role,
+            role: UPRole === "LANDLORD"
+                ? "LANDLORD"
+                : "TENANT",
             occupation,
             age,
             profileImage,

@@ -7,7 +7,7 @@ const router = Router();
 
 router.post("/register", authController.registerUser)
 router.post("/login", authController.loginUser)
-router.get("/me", auth(Role.LANDLORD, Role.TENANT, "ADMIN"), authController.getUserProfile)
+router.get("/me", auth(Role.LANDLORD, Role.TENANT, Role.ADMIN), authController.getUserProfile)
 
 
 export const authRouter = router;
