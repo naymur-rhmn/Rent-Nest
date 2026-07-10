@@ -5,7 +5,7 @@ import httpStatus from "http-status";
 
 const createRentalRequest = catchAsync(async (req , res ) => {
     const payload = req.body;
-    const tenantId = req?.user?.id;
+    const tenantId = req.user?.id;
 
     const rentalRequest = await RentalService.submitRentalRequest(payload, tenantId as string);
     
@@ -18,7 +18,8 @@ const createRentalRequest = catchAsync(async (req , res ) => {
 })
 
 const getRentalRequests = catchAsync(async (req , res ) => {
-    const rentalRequests = await RentalService.getRentalRequests();
+    const landlordId = req.user?.id;
+    const rentalRequests = await RentalService.getRentalRequests(landlordId as string);
     
     sendResponse(res, {
         success: true,
@@ -30,7 +31,7 @@ const getRentalRequests = catchAsync(async (req , res ) => {
 
 const getRentalRequestDetails = catchAsync(async (req , res ) => {
     const rentalRequestId = req.params?.id;
-    
+
     const rentalRequest = await RentalService.getRentalRequestById(rentalRequestId as string);
     
     sendResponse(res, {
