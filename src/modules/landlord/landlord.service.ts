@@ -1,5 +1,6 @@
+import { PropertyStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma"
-import { IProperty } from "./landlord.interface"
+import { IProperty, IUpdateProperty } from "./landlord.interface"
 
 const createProperty = async(payload: IProperty, landlordId: string) => {
     await prisma.category.findUniqueOrThrow({
@@ -12,8 +13,8 @@ const createProperty = async(payload: IProperty, landlordId: string) => {
         where : {
             unique_landlord_property: {
                 landlordId,
-                title: payload.title.trim().toLowerCase(),
-                address: payload.address.trim().toLowerCase(),
+                title: payload.title.trim(),
+                address: payload.address.trim(),
             },
         }
     })
@@ -25,8 +26,8 @@ const createProperty = async(payload: IProperty, landlordId: string) => {
     const property = await prisma.property.create({
         data: {
             ...payload,
-            title: payload.title.trim().toLowerCase(),
-            address: payload.address.trim().toLowerCase(),
+            title: payload.title.trim() ,
+            address: payload.address.trim(),
             landlordId
         },
         include: {
@@ -36,8 +37,41 @@ const createProperty = async(payload: IProperty, landlordId: string) => {
 
     return property
 }
-const updateProperty = async() => {
+const updateProperty = async(payload : IUpdateProperty, propertyId: string) => {
+    const property = await prisma.property.findUniqueOrThrow({
+        where: {
+            id : propertyId
+        }
+    })
+ 
+    if(
+        property.status !== PropertyStatus.AVAILABLE 
+        && 
+        property.status !==  PropertyStatus.PENDING
+    ) {
+        throw new Error(`Property must be ${PropertyStatus.AVAILABLE} or ${PropertyStatus.PENDING} state before update`)
+    }
 
+    if (payload.categoryId) {
+        await prisma.category.findUniqueOrThrow({
+            where: {
+                id: payload.categoryId,
+            },
+        });
+    }
+
+    const updateProperty = await prisma.property.update({
+        where: {
+            id: propertyId
+        },
+        data: {
+            ...payload
+        },
+        include: {
+            category: true
+        }
+    })
+    return updateProperty
 }
 const deleteProperty = async() => {
 

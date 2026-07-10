@@ -35,8 +35,8 @@ const deleteCategories = catchAsync( async(req, res) => {
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,
-        message: "Category deleted Successfull",
-        data: []
+        message: "Category deleted Successfully",
+        data: null
     })
 }) 
 

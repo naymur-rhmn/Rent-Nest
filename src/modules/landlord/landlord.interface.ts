@@ -15,3 +15,17 @@ export interface IProperty {
   landlordId: string;
   categoryId: string;
 }
+
+
+export interface IUpdateProperty {
+  title?: string;
+  description?: string;
+  rent?: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  address?: string;
+  city?: string;
+  division?: string;
+  country?: string;
+  categoryId?: string;
+}

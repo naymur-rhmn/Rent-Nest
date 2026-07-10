@@ -48,9 +48,10 @@ const deleteCategories = async (id : string) => {
         );
     }
 
-    await prisma.category.delete({
+    const deletedCategory = await prisma.category.delete({
         where : {id}
     })
+    return deleteCategories
 }
 
 export const categoriesService = {
