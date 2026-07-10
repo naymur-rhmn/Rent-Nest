@@ -99,10 +99,10 @@ const getUserProfile = async (userId: string) => {
         omit: {
             password: true,
         },
-        include: {
-            properties: true,
-            rentalRequest: true
-        }
+        // include: {
+        //     properties: true,
+        //     rentalRequest: true
+        // }
     })
 
     return user

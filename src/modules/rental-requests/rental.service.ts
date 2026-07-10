@@ -62,38 +62,38 @@ const getRentalRequestById = async(id: string) => {
         where: {
             id
         },
-        select: {
-            id: true,
-            message: true,
-            moveInDate: true,
-            status: true,
-            tenant: {
-                select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                    phone: true,
-                    age: true,
-                    occupation: true,
-                    state: true,
-                    country: true,
-                    profileImage: true,
-                }
-            }, 
-            property: {
-                select: {
-                    id: true,
-                    title: true,
-                    rent: true,
-                    category: {
-                        select: {
-                            name: true
-                        }
-                    }
-                }
-            }
+        // select: {
+        //     id: true,
+        //     message: true,
+        //     moveInDate: true,
+        //     status: true,
+        //     tenant: {
+        //         select: {
+        //             id: true,
+        //             name: true,
+        //             email: true,
+        //             phone: true,
+        //             age: true,
+        //             occupation: true,
+        //             state: true,
+        //             country: true,
+        //             profileImage: true,
+        //         }
+        //     }, 
+        //     property: {
+        //         select: {
+        //             id: true,
+        //             title: true,
+        //             rent: true,
+        //             category: {
+        //                 select: {
+        //                     name: true
+        //                 }
+        //             }
+        //         }
+        //     }
 
-        }
+        // }
     });
 };
 
