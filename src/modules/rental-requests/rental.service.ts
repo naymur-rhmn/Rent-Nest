@@ -79,8 +79,7 @@ const getRentalRequestById = async(id: string) => {
                     country: true,
                     profileImage: true,
                 }
-            },
-            // property: true
+            }, 
             property: {
                 select: {
                     id: true,

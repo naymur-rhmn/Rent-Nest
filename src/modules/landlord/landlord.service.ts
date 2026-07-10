@@ -75,15 +75,47 @@ const updateProperty = async(payload : IUpdateProperty, propertyId: string) => {
     return updateProperty
 }
 
-const getAllRentalRequest = async() => {
-    
+const getAllRentalRequest = async(landlordId: string) => {
+    const landlordProperties = await prisma.property.findMany({
+        where: {
+            landlordId,
+            isDeleted: false
+        },
+        select: {
+            id: true,
+            title: true, 
+            rentalRequest: {
+                select: {
+                    id: true,
+                    message: true,
+                    moveInDate: true,
+                    status: true,
+                    tenant: {
+                        select: {
+                           id: true,
+                            name: true,
+                            email: true,
+                            phone: true,
+                            age: true,
+                            occupation: true,
+                            state: true,
+                            country: true,
+                            profileImage: true,
+                        }
+                    }
+                }
+            } 
+        },
+         
+    })
+    return landlordProperties 
 }
 
 const approveOrRejectRentalReq = async() => {
     
 }
 
-const deleteProperty = async(propertyId: string) => {
+const removeProperty = async(propertyId: string) => {
     const property = await prisma.property.findUniqueOrThrow({
         where: {
             id: propertyId,
@@ -91,14 +123,14 @@ const deleteProperty = async(propertyId: string) => {
     });
 
     if (property.status === PropertyStatus.RENTED) {
-        throw new Error("Rented property cannot be deleted");
+        throw new Error("Rented property cannot be removed.");
     }
 
     if(property.isDeleted) {
-        throw new Error("Property already deleted");
+        throw new Error("Property already removed.");
     }
 
-    const deletedProperty = await prisma.property.update({
+    const removedProperty = await prisma.property.update({
         where: {
             id: propertyId,
         },
@@ -113,13 +145,13 @@ const deleteProperty = async(propertyId: string) => {
             deletedAt: true  
         }
     }); 
-    return deletedProperty;
+    return removedProperty;
 }
 
 export const landlordService = {
     createProperty,
     updateProperty,
-    deleteProperty,
+    removeProperty,
     getAllRentalRequest,
     approveOrRejectRentalReq
 }

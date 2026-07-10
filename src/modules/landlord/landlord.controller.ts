@@ -32,29 +32,37 @@ const updateProperty = catchAsync(async(req, res) => {
 })
 
 const getAllRentalRequest = catchAsync(async(req, res) => {
-    
+    const landlordId = req.user?.id;
+    const rentalRequests = await landlordService.getAllRentalRequest(landlordId as string);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Rental requests retrieved successfully",
+        data: rentalRequests
+    })
 })
 const approveOrRejectRentalReq = catchAsync(async(req, res) => {
     
 })
 
-const deleteProperty = catchAsync(async(req, res) => {
+const removeProperty = catchAsync(async(req, res) => {
     const propertyId = req.params?.id;
 
-    const deletedProperty = await landlordService.deleteProperty(propertyId as string);
+    const removedProperty = await landlordService.removeProperty(propertyId as string);
 
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,
-        message: "Property deleted Successfully",
-        data: {deletedProperty}
+        message: "Property removed Successfully",
+        data: {removedProperty}
     })
 })
 
 export const landlordController = {
     createProperty,
     updateProperty,
-    deleteProperty,
+    removeProperty,
     getAllRentalRequest,
     approveOrRejectRentalReq
 }
