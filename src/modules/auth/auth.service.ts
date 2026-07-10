@@ -9,7 +9,7 @@ import { jwtUtils } from "../../utils/jwt";
 const userRegistration = async (payload : IRegisterUser) => {
     const {name, email, password, phone, role, occupation, age, profileImage, country, state, status } = payload;
 
-    const UPRole = role?.trim().toUpperCase();
+    const URole = role?.trim().toUpperCase();
 
     const hashedPassword = await bcrypt.hash(password, Number(config.bcrypt_salt_rounds))
 
@@ -27,7 +27,7 @@ const userRegistration = async (payload : IRegisterUser) => {
             email,
             password : hashedPassword,
             phone,
-            role: UPRole === "LANDLORD"
+            role: URole === "LANDLORD"
                 ? "LANDLORD"
                 : "TENANT",
             occupation,

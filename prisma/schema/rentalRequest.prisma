@@ -13,7 +13,7 @@ model Rental_Request {
     tenantId String
     tenant   User   @relation(fields: [tenantId], references: [id])
 
-    @@unique([tenantId, propertyId])
+    @@unique([tenantId, propertyId], name: "rental_tenant_property_unique")
     @@index([tenantId])
     @@index([propertyId])
     @@map("Rental_Requests")

@@ -1,10 +1,12 @@
 import express from "express";
 import cors from "cors"
-import cookieParser from "cookie-parser";
 import config from "./config";
+import cookieParser from "cookie-parser";
 import { authRouter } from "./modules/auth/auth.route";
 import { landloardRouter } from "./modules/landlord/landlord.route";
 import { categoriesRouter } from "./modules/categories/categories.route";
+import { propertiesRouter } from "./modules/properties/properties.route";
+import { rentalRouter } from "./modules/rental-requests/rental.route";
 
 const app = express();
 
@@ -24,12 +26,16 @@ app.use("/api/categories", categoriesRouter)
 
 app.use("/api/landlord", landloardRouter)
 
+app.use("/api/properties", propertiesRouter)
+
+app.use("/api/rentals", rentalRouter)
+
 
 
 app.get("/", (req, res) => {
     res.send({
         status: 200,
-        message: "Hello world"
+        message: "RentNest API",
     })
 })
 

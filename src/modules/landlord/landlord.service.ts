@@ -37,6 +37,7 @@ const createProperty = async(payload: IProperty, landlordId: string) => {
 
     return property
 }
+
 const updateProperty = async(payload : IUpdateProperty, propertyId: string) => {
     const property = await prisma.property.findUniqueOrThrow({
         where: {
@@ -73,9 +74,11 @@ const updateProperty = async(payload : IUpdateProperty, propertyId: string) => {
     })
     return updateProperty
 }
+
 const getAllRentalRequest = async() => {
     
 }
+
 const approveOrRejectRentalReq = async() => {
     
 }
@@ -86,7 +89,6 @@ const deleteProperty = async(propertyId: string) => {
             id: propertyId,
         },
     });
-
 
     if (property.status === PropertyStatus.RENTED) {
         throw new Error("Rented property cannot be deleted");
