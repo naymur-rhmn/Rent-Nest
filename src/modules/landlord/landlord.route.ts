@@ -9,6 +9,6 @@ router.post("/properties", auth(Role.LANDLORD), landlordController.createPropert
 router.put("/properties/:id",auth(Role.LANDLORD), landlordController.updateProperty)
 router.get("/requests", landlordController.getAllRentalRequest)
 router.patch("/requests", landlordController.approveOrRejectRentalReq)
-router.delete("/properties/:id", landlordController.deleteProperty)
+router.delete("/properties/:id", auth(Role.LANDLORD, Role.ADMIN), landlordController.deleteProperty)
 
 export const landloardRouter = router;

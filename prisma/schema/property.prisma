@@ -11,6 +11,9 @@ model Property {
     country     String         @db.VarChar(255)
     status      PropertyStatus @default(AVAILABLE)
 
+    isDeleted Boolean   @default(false)
+    deletedAt DateTime?
+
     landlordId String
     landlord   User   @relation(fields: [landlordId], references: [id])
 

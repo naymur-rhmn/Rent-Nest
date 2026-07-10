@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import { ILoginUser, IRegisterUser } from "./auth.interface"
 import config from "../../config";
 import { prisma } from "../../lib/prisma";
-import jwt, { JwtPayload, SignOptions } from "jsonwebtoken"
+import {   SignOptions } from "jsonwebtoken"
 import { jwtUtils } from "../../utils/jwt";
 
 

@@ -73,16 +73,46 @@ const updateProperty = async(payload : IUpdateProperty, propertyId: string) => {
     })
     return updateProperty
 }
-const deleteProperty = async() => {
-
-}
 const getAllRentalRequest = async() => {
-
+    
 }
 const approveOrRejectRentalReq = async() => {
-
+    
 }
 
+const deleteProperty = async(propertyId: string) => {
+    const property = await prisma.property.findUniqueOrThrow({
+        where: {
+            id: propertyId,
+        },
+    });
+
+
+    if (property.status === PropertyStatus.RENTED) {
+        throw new Error("Rented property cannot be deleted");
+    }
+
+    if(property.isDeleted) {
+        throw new Error("Property already deleted");
+    }
+
+    const deletedProperty = await prisma.property.update({
+        where: {
+            id: propertyId,
+        },
+        data: {
+            isDeleted: true,
+            deletedAt: new Date(),
+        },
+        select: {
+            id: true,
+            title: true,
+            isDeleted: true,
+            deletedAt: true  
+        }
+    }); 
+    return deletedProperty;
+}
 
 export const landlordService = {
     createProperty,
