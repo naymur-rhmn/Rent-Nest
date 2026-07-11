@@ -29,14 +29,14 @@ const updateUserStatus = catchAsync(async(req, res) => {
 })
 
 const getAllProperties = catchAsync(async(req, res) => {
-    // const properties = await AdminService.getAllProperties();
+    const properties = await AdminService.getAllProperties();
 
-    // sendResponse(res, {
-    //     success: true,
-    //     statusCode: httpStatus.CREATED,
-    //     message: "All Properties Retrieved Successfully",
-    //     data: {properties}
-    // })
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.CREATED,
+        message: "All Properties Retrieved Successfully",
+        data: {properties}
+    })
 })
 
 const getAllRentalRequests = catchAsync(async(req, res) => {
