@@ -15,17 +15,17 @@ const getAllUsers = catchAsync(async(req, res) => {
 })
 
 const updateUserStatus = catchAsync(async(req, res) => {
-    // const userId = req.params?.id;
-    // const payload = req.body;
+    const userId = req.params?.id;
+    const payload = req.body;
 
-    // const updatedUserStatus = await AdminService.updateUserStatus(payload, userId as string)
+    const updatedUserStatus = await AdminService.updateUserStatus(payload, userId as string)
 
-    //     sendResponse(res, {
-    //     success: true,
-    //     statusCode: httpStatus.CREATED,
-    //     message: "User Status Update Successfully",
-    //     data: updatedUserStatus
-    // })
+        sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.CREATED,
+        message: "User Status Update Successfully",
+        data: updatedUserStatus
+    })
 })
 
 const getAllProperties = catchAsync(async(req, res) => {
