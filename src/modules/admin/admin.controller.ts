@@ -40,14 +40,14 @@ const getAllProperties = catchAsync(async(req, res) => {
 })
 
 const getAllRentalRequests = catchAsync(async(req, res) => {
-    // const rentalRequests = await AdminService.getAllRentalRequests();
+    const rentalRequests = await AdminService.getAllRentalRequests();
 
-    // sendResponse(res, {
-    //     success: true,
-    //     statusCode: httpStatus.CREATED,
-    //     message: "All Rental Request Retrieved Successfully",
-    //     data: {rentalRequests}
-    // })
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.CREATED,
+        message: "All Rental Request Retrieved Successfully",
+        data: {rentalRequests}
+    })
 })
 
 export const AdminController = {
