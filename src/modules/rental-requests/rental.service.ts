@@ -27,73 +27,68 @@ const submitRentalRequest = async(payload: IRentalRequest, tenantId: string) => 
     return rentalRequest;
 };
 
-const getRentalRequests = async(landlordId: string) => {
-    const landlordProperties = await prisma.property.findMany({
+const getRentalRequests = async(tenantId: string) => {
+    const rentalRequests = await prisma.rental_Request.findMany({
         where: {
-            landlordId,
-            isDeleted: false
+            tenantId
         },
-        select: {
+        select: { 
             id: true,
-            title: true, 
-            rentalRequest: {
+            moveInDate: true,
+            message: true,
+            status: true,
+            property: {
                 select: {
                     id: true,
-                    message: true,
-                    moveInDate: true,
-                    status: true,
-                    tenant: {
+                    title: true,
+                    rent: true, 
+                    category: {
                         select: {
-                            id: true,
-                            name: true,
-                            email: true
+                            name: true
                         }
                     }
                 }
-            } 
-        },
+            },
+        }
          
     })
-    return landlordProperties 
+    return rentalRequests 
 }
 
 const getRentalRequestById = async(id: string) => {
+    console.log(id)
     return prisma.rental_Request.findUniqueOrThrow({
         where: {
             id
         },
-        // select: {
-        //     id: true,
-        //     message: true,
-        //     moveInDate: true,
-        //     status: true,
-        //     tenant: {
-        //         select: {
-        //             id: true,
-        //             name: true,
-        //             email: true,
-        //             phone: true,
-        //             age: true,
-        //             occupation: true,
-        //             state: true,
-        //             country: true,
-        //             profileImage: true,
-        //         }
-        //     }, 
-        //     property: {
-        //         select: {
-        //             id: true,
-        //             title: true,
-        //             rent: true,
-        //             category: {
-        //                 select: {
-        //                     name: true
-        //                 }
-        //             }
-        //         }
-        //     }
+        select: {
+            id: true,
+            message: true,
+            moveInDate: true,
+            status: true,
+            tenant: false, 
+            property: {
+                select: {
+                    id: true,
+                    title: true,
+                    description: true,
+                    rent: true,
+                    address: true,
+                    city: true,
+                    country: true,
+                    division: true,
+                    bedrooms: true,
+                    bathrooms: true,
+                    status: true, 
+                    category: {
+                        select: {
+                            name: true
+                        }
+                    }
+                }
+            }
 
-        // }
+        }
     });
 };
 

@@ -25,20 +25,20 @@ const getRentalRequests = catchAsync(async (req , res ) => {
         success: true,
         statusCode: httpStatus.OK,
         message: "Rental requests retrieved successfully",
-        data: rentalRequests
+        data: {rentalRequests}
     });
 })
 
 const getRentalRequestDetails = catchAsync(async (req , res ) => {
     const rentalRequestId = req.params?.id;
 
-    const rentalRequest = await RentalService.getRentalRequestById(rentalRequestId as string);
+    const rentalRequestDetails = await RentalService.getRentalRequestById(rentalRequestId as string);
     
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,
         message: "Rental request details retrieved successfully",
-        data: rentalRequest
+        data: {rentalRequestDetails}
     });
 });
 
