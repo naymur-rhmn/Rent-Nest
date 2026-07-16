@@ -1,17 +1,17 @@
 model Rental_Request {
-    id     String        @id @default(uuid())
-    status RENTAL_STATUS @default(PENDING)
-
-    moveInDate DateTime? @default(now())
-
-    message   String   @db.Text
-    createdAt DateTime @default(now())
+    id              String       @id @default(uuid())
+    status          RentalStatus @default(PENDING)
+    message         String       @db.Text
+    askingRentMonth Int          @default(1)
+    moveInDate      DateTime?
 
     propertyId String
+    tenantId   String
     property   Property @relation(fields: [propertyId], references: [id])
+    tenant     User     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
-    tenantId String
-    tenant   User   @relation(fields: [tenantId], references: [id])
+    payment   Payment?
+    createdAt DateTime @default(now())
 
     @@unique([tenantId, propertyId], name: "rental_tenant_property_unique")
     @@index([tenantId])

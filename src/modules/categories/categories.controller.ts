@@ -6,15 +6,16 @@ import  httpStatus  from "http-status";
 const createCategories = catchAsync(async (req, res) => {
     const payload = req.body
 
-    const newCategory = await categoriesService.createCategories(payload);
+    const categories = await categoriesService.createCategories(payload);
 
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.CREATED,
         message: "Category created Successfull",
-        data: {newCategory}
+        data: {categories}
     })
 }) 
+
 const getAllCategories = catchAsync(async(req, res) => {
     const categories = await categoriesService.getAllCategories();
 
@@ -27,6 +28,7 @@ const getAllCategories = catchAsync(async(req, res) => {
     }
     })
 }) 
+
 const deleteCategories = catchAsync( async(req, res) => {
     const id = req.params?.id; 
 

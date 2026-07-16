@@ -9,10 +9,15 @@ enum UserStatus {
     UNBAN
 }
 
-enum RENTAL_STATUS {
+enum RentalStatus {
     PENDING
     APPROVED
     REJECTED
+}
+
+enum RentalType {
+    MONTHLY
+    YEARLY
 }
 
 enum PropertyStatus {
@@ -20,4 +25,12 @@ enum PropertyStatus {
     AVAILABLE
     RENTED
     UNAVAILABLE
+}
+
+enum PaymentStatus {
+    PENDING
+    SUCCEEDED
+    FAILED
+    REFUNDED
+    CANCELED
 }

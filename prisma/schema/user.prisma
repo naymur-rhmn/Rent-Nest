@@ -1,26 +1,23 @@
 model User {
-    id String @id @default(uuid())
+    id               String  @id @default(uuid())
+    name             String  @db.VarChar(255)
+    email            String  @unique @db.VarChar(255)
+    password         String  @db.VarChar(255)
+    phone            String  @db.VarChar(50)
+    role             Role    @default(TENANT)
+    occupation       String? @db.VarChar(255)
+    age              Int?
+    profileImage     String? @db.VarChar(255)
+    country          String? @db.VarChar(100)
+    state            String? @db.VarChar(100)
+    stripeCustomerId String? @unique
 
-    name     String @db.VarChar(255)
-    email    String @unique @db.VarChar(255)
-    password String @db.VarChar(255)
-
-    phone      String  @db.VarChar(50)
-    role       Role    @default(TENANT)
-    occupation String? @db.VarChar(255)
-
-    age          Int?
-    profileImage String? @db.VarChar(255)
-
-    country String?     @db.VarChar(100)
-    state   String?     @db.VarChar(100)
-    status  UserStatus? @default(UNBAN)
+    status        UserStatus?      @default(UNBAN)
+    properties    Property[]
+    rentalRequest Rental_Request[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-
-    properties    Property[]
-    rentalRequest Rental_Request[]
 
     @@map("Users")
 }

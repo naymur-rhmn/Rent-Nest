@@ -1,27 +1,79 @@
 import { prisma } from "../../lib/prisma";
 import { ICategory } from "./categories.interface"
 
-const createCategories = async(payload: ICategory ) => {  
-    const normalizedName = payload.name.trim().toLowerCase();
+// const createCategories = async(payload: ICategory ) => {  
+//     const normalizedName = payload.name.trim().toLowerCase();
 
-    const existingCategory = await prisma.category.findUnique({
+//     const existingCategory = await prisma.category.findUnique({
+//         where: {
+//             name: normalizedName,
+//         },
+//     });
+
+//     if (existingCategory) {
+//         throw new Error("Category already exists.");
+//     }
+
+//     const newCategory = await prisma.category.create({
+//         data: {
+//             name: normalizedName
+//         },
+//     });
+
+//     return newCategory
+// }
+
+const createCategories = async (payload: ICategory | ICategory[]) => {
+    const categories = Array.isArray(payload) ? payload : [payload];
+
+    const normalizedCategories = categories.map((category) => ({
+        name: category.name.trim().toUpperCase(),
+    }));
+
+    // Remove duplicate names from the request itself
+    const uniqueCategories = [
+        ...new Map(
+            normalizedCategories.map((category) => [category.name, category])
+        ).values(),
+    ];
+
+    // Find already existing categories
+    const existingCategories = await prisma.category.findMany({
         where: {
-            name: normalizedName,
+            name: {
+                in: uniqueCategories.map((category) => category.name),
+            },
+        },
+        select: {
+            name: true,
         },
     });
 
-    if (existingCategory) {
-        throw new Error("Category already exists.");
+    const existingNames = new Set(
+        existingCategories.map((category) => category.name)
+    );
+
+    const categoriesToCreate = uniqueCategories.filter(
+        (category) => !existingNames.has(category.name)
+    );
+
+    if (categoriesToCreate.length === 0) {
+        throw new Error("All categories already exist.");
     }
 
-    const newCategory = await prisma.category.create({
-        data: {
-            name: normalizedName
-        },
+    await prisma.category.createMany({
+        data: categoriesToCreate,
     });
 
-    return newCategory
-}
+    return await prisma.category.findMany({
+        where: {
+            name: {
+                in: categoriesToCreate.map((category) => category.name),
+            },
+        },
+    });
+};
+
 
 const getAllCategories = async () => {
     const categories = await prisma.category.findMany({
