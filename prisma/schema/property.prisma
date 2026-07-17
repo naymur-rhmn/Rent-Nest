@@ -18,6 +18,7 @@ model Property {
     rentalType                 RentalType       @default(MONTHLY)
     availableRentalPeriodMonth Int?             @default(1)
     rentalRequest              Rental_Request[]
+    reviews                    Review[]
 
     isDeleted Boolean   @default(false)
     deletedAt DateTime?

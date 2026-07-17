@@ -5,6 +5,7 @@ import config from "../config";
 import catchAsync from "../utils/catchAsync";
 import { jwtUtils } from "../utils/jwt";
 import { prisma } from "../lib/prisma";
+import { NextFunction, Request } from "express";
 
 declare global {
     namespace Express {
@@ -69,3 +70,4 @@ export const auth =  (...requiredRoles: Role[]) => {
         next()
     })
 }
+

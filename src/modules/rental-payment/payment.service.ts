@@ -19,9 +19,9 @@ const createPaymentSession = async (userId: string, rentalRequestId: string) => 
             }
         }) 
 
-        if(rentalRequest.status !== RentalStatus.APPROVED) {
-            throw new Error("You are not APPROVED yet!")
-        }
+        // if(rentalRequest.status !== RentalStatus.APPROVED) {
+        //     throw new Error("You are not APPROVED yet!")
+        // }
 
         let stripeCustomerId = rentalRequest.tenant?.stripeCustomerId
         const productDescription = rentalRequest.property?.description.slice(0, 250)
@@ -173,10 +173,7 @@ const getAllPayments = async(userId: string) => {
             }
         })
         return payments
-    }
-    else {
-        throw new Error("You are not Authorized")
-    }
+    } 
 }
 
 
@@ -187,7 +184,6 @@ const getPaymentDetails = async (id: string) => {
         }
     })
 }
-
 
 
 export const paymentService = {

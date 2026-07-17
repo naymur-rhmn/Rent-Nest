@@ -15,6 +15,7 @@ model User {
     status        UserStatus?      @default(UNBAN)
     properties    Property[]
     rentalRequest Rental_Request[]
+    reviews       Review[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
