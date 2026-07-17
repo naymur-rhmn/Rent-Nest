@@ -20,7 +20,7 @@ app.use(cors({
     credentials: true,
 }));
 
-app.post('/api/payments/webhook', express.raw({type: 'application/json'}))
+app.post('/api/payments/confirm', express.raw({type: 'application/json'}))
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))

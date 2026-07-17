@@ -2,7 +2,7 @@ import { prisma } from "../../lib/prisma";
 import { IRentalRequest } from "./rental.interface"
 
 const submitRentalRequest = async(payload: IRentalRequest, tenantId: string) => {
-    const { moveInDate, message, propertyId } = payload;
+    const { message, askingRentMonth, moveInDate, propertyId } = payload;
 
     const existingRequest = await prisma.rental_Request.findFirst({
         where: {
@@ -19,6 +19,7 @@ const submitRentalRequest = async(payload: IRentalRequest, tenantId: string) => 
         data: {
             moveInDate: new Date(moveInDate),
             message,
+            askingRentMonth,
             propertyId,
             tenantId
         }

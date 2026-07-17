@@ -12,7 +12,7 @@ const createPaymentSession = catchAsync(async (req, res) => {
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,
-        message: "Checkout Completed Successfully",
+        message: "Payment Session Created Successfully",
         data: result
     })
 })
@@ -21,17 +21,38 @@ const handleWebhook = catchAsync(async(req, res) => {
     const event = req.body
     const signature = req.headers['stripe-signature']! ;
 
-    const result = await paymentService.handleWebhook(event, signature as string)
+    await paymentService.handleWebhook(event, signature as string)
+})
+
+const getAllPayments = catchAsync(async(req, res) => {
+    const userId = req?.user?.id as string
+
+    const allPayments = await paymentService.getAllPayments(userId)
 
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,
-        message: "Webhook triggered Successfully",
-        data: null
+        message: "Payments retrived successfully",
+        data: {allPayments}
+    })
+})
+
+
+const getPaymentDetails = catchAsync(async(req, res) => {
+    const id = req.params?.id;
+    const paymentDetails = await paymentService.getPaymentDetails(id as string)
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Payment Details Retrieved Success",
+        data: paymentDetails
     })
 })
 
 export const  paymentController = {
     createPaymentSession,
-    handleWebhook
+    handleWebhook,
+    getAllPayments,
+    getPaymentDetails
 }

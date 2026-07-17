@@ -1,6 +1,6 @@
-import { PropertyStatus } from "../../../generated/prisma/enums";
+import { PropertyStatus, RentalStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma"
-import { IProperty, IUpdateProperty } from "./landlord.interface"
+import { IApproveReject, IProperty, IUpdateProperty } from "./landlord.interface"
 
 const createProperty = async(payload: IProperty, landlordId: string) => {
     await prisma.category.findUniqueOrThrow({
@@ -111,7 +111,29 @@ const getAllRentalRequest = async(landlordId: string) => {
     return landlordProperties 
 }
 
-const approveOrRejectRentalReq = async() => {
+const approveOrRejectRentalReq = async(payload: IApproveReject,rentalId: string) => {
+    const status = payload.status.trim().toUpperCase();
+    
+    await prisma.rental_Request.findUniqueOrThrow({
+        where: {
+            id: rentalId
+        }
+    })
+
+    
+    if(status === RentalStatus.APPROVED || status === RentalStatus.PENDING || status === RentalStatus.REJECTED) { 
+        const result = await prisma.rental_Request.update({
+            where: {
+                id: rentalId
+            },
+            data: {
+                status: status
+            }
+        })
+        return result
+    } else {
+        throw new Error("Provide correct input form")
+    }
     
 }
 

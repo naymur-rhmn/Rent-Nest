@@ -1,4 +1,4 @@
-import { PropertyStatus } from "../../../generated/prisma/enums";
+import { PropertyStatus, RentalStatus } from "../../../generated/prisma/enums";
 
 export interface IProperty {
   title: string;
@@ -28,4 +28,8 @@ export interface IUpdateProperty {
   division?: string;
   country?: string;
   categoryId?: string;
+}
+
+export interface IApproveReject {
+  status: RentalStatus
 }

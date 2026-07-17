@@ -11,7 +11,7 @@ router.put("/properties/:id",auth(Role.LANDLORD), landlordController.updatePrope
 
 router.get("/requests", auth(Role.LANDLORD), landlordController.getAllRentalRequest)
 
-router.patch("/requests", auth(Role.LANDLORD), landlordController.approveOrRejectRentalReq)
+router.patch("/requests/:id", auth(Role.LANDLORD), landlordController.approveOrRejectRentalReq)
 
 router.delete("/properties/:id", auth(Role.LANDLORD, Role.ADMIN), landlordController.removeProperty)
 

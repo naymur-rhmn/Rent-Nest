@@ -43,7 +43,15 @@ const getAllRentalRequest = catchAsync(async(req, res) => {
     })
 })
 const approveOrRejectRentalReq = catchAsync(async(req, res) => {
-    
+    const rentalId = req.params?.id;
+    const result = await landlordService.approveOrRejectRentalReq(req.body ,rentalId as string)
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Operation Successfull",
+        data: result
+    })
 })
 
 const removeProperty = catchAsync(async(req, res) => {

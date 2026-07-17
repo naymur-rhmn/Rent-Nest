@@ -4,10 +4,10 @@ model Property {
     categoryId   String
     title        String   @db.VarChar(255)
     description  String   @db.Text
-    rent         Decimal  @db.Decimal(10, 2)
+    rent         Decimal  @db.Decimal(10, 2) // usd
     bedrooms     Int?
     bathrooms    Int?
-    area         Decimal? @db.Decimal(8, 2)
+    area         Decimal? @db.Decimal(8, 2) //sqrft
     gMapLocation String?  @db.Text
     address      String   @db.Text
     city         String   @db.VarChar(255)

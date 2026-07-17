@@ -1,27 +1,6 @@
 import { prisma } from "../../lib/prisma";
 import { ICategory } from "./categories.interface"
 
-// const createCategories = async(payload: ICategory ) => {  
-//     const normalizedName = payload.name.trim().toLowerCase();
-
-//     const existingCategory = await prisma.category.findUnique({
-//         where: {
-//             name: normalizedName,
-//         },
-//     });
-
-//     if (existingCategory) {
-//         throw new Error("Category already exists.");
-//     }
-
-//     const newCategory = await prisma.category.create({
-//         data: {
-//             name: normalizedName
-//         },
-//     });
-
-//     return newCategory
-// }
 
 const createCategories = async (payload: ICategory | ICategory[]) => {
     const categories = Array.isArray(payload) ? payload : [payload];

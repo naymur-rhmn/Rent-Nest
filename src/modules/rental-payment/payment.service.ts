@@ -2,22 +2,26 @@ import Stripe from "stripe"
 import config from "../../config"
 import { prisma } from "../../lib/prisma"
 import { stripe } from "../../lib/stripe"
-import { PaymentStatus } from "../../../generated/prisma/enums"
+import { PaymentStatus, RentalStatus, Role } from "../../../generated/prisma/enums"
+import { handleCheckoutCompleted, handleCheckoutExpired } from "./payment.utils"
 // import { PaymentStatus } from "../../../generated/prisma/enums"
 
 const createPaymentSession = async (userId: string, rentalRequestId: string) => {
     const transactionResult = await prisma.$transaction(async (tx) => {
-
         const rentalRequest = await tx.rental_Request.findUniqueOrThrow({
             where: {
                 id: rentalRequestId, 
-                tenantId: userId
+                tenantId: userId,
             },
             include: {
                 tenant: true, 
                 property: true
             }
         }) 
+
+        if(rentalRequest.status !== RentalStatus.APPROVED) {
+            throw new Error("You are not APPROVED yet!")
+        }
 
         let stripeCustomerId = rentalRequest.tenant?.stripeCustomerId
         const productDescription = rentalRequest.property?.description.slice(0, 250)
@@ -86,103 +90,109 @@ const handleWebhook = async(payload: Buffer, signature: string) => {
         endpointSecret
     )
  
-    switch (event.type) {
-        case "checkout.session.completed":
-            const paymentObj: Stripe.Checkout.Session = event.data.object;
-
-            // const checkoutCompleted = async(paymentObj: ) => {
-    
-            //     const stripeCustomerId = paymentObj.customer as string;
-            //     const stripePaymentIntentId = paymentObj.payment_intent as string
-            //     const rentalRequestId = paymentObj.metadata?.rentalRequestId as string; 
-            //     const amount = Number(paymentObj.amount_total)
-            //     const currency = paymentObj.currency as string
-            //     const paymentMethod = paymentObj.payment_method_types[0] as string;
-            //     const paidAt = new Date(paymentObj.created / 1000)
-                
-            //     await prisma.payment.upsert({
-            //         where: {
-            //             rentalRequestId 
-            //         },
-            //         create: {
-            //             rentalRequestId,
-            //             stripePaymentIntentId,
-            //             stripeCustomerId,
-            //             amount,
-            //             currency,
-            //             paymentMethod,
-            //             status: PaymentStatus.SUCCEEDED,
-            //             paidAt,
-            //         },
-            //         update: {
-            //             rentalRequestId,
-            //             stripePaymentIntentId,
-            //             stripeCustomerId,
-            //             amount,
-            //             currency,
-            //             paymentMethod,
-            //             status: PaymentStatus.SUCCEEDED,
-            //             paidAt,
-            //         }
-            //     }) 
-            // }
-            // await checkoutCompleted(paymentObj)
-            // Payment successful
-            // const paymentObj: Stripe.Checkout.Session = event.data.object;
- 
-            const stripeCustomerId = paymentObj.customer as string;
-            const stripePaymentIntentId = paymentObj.payment_intent as string
-            const rentalRequestId = paymentObj.metadata?.rentalRequestId as string; 
-            const amount = Number(paymentObj.amount_total)
-            const currency = paymentObj.currency as string
-            const paymentMethod = paymentObj.payment_method_types[0] as string;
-            const paidAt = new Date(paymentObj.created / 1000)
+switch (event.type) {
+        case "checkout.session.completed": {
+            const session = event.data.object as Stripe.Checkout.Session;
             
-            await prisma.payment.upsert({
-                where: {
-                    rentalRequestId 
-                },
-                create: {
-                    rentalRequestId,
-                    stripePaymentIntentId,
-                    stripeCustomerId,
-                    amount,
-                    currency,
-                    paymentMethod,
-                    status: PaymentStatus.SUCCEEDED,
-                    paidAt,
-                },
-                update: {
-                    rentalRequestId,
-                    stripePaymentIntentId,
-                    stripeCustomerId,
-                    amount,
-                    currency,
-                    paymentMethod,
-                    status: PaymentStatus.SUCCEEDED,
-                    paidAt,
-                }
-            }) 
+            await handleCheckoutCompleted(session)
+
+            console.log("Payment succeeded");
             break;
+        }
 
-        case "checkout.session.expired":
-            // User abandoned checkout
-             
+        case "checkout.session.expired": {
+            const session = event.data.object as Stripe.Checkout.Session;
+            
+            await handleCheckoutExpired(session)
 
+            console.warn(`Checkout expired for rentalRequest: ${session.metadata?.rentalRequestId}`);
             break;
+        }
 
-        case "payment_intent.payment_failed":
-            // Payment failed
-
-            break; 
-
-        default:
-            console.log(`No events matched! Unhandled event type ${event.type}`);
-            break
-    } 
+        default: console.log(`Unhandled event type: ${event.type}`);
+    }
 }
+
+const getAllPayments = async(userId: string) => {
+    const user = await prisma.user.findUniqueOrThrow({
+        where: {
+            id: userId
+        }
+    })
+
+    if(user && user.role === Role.ADMIN) {
+        const payments = await prisma.payment.findMany({
+            omit: {
+                stripePaymentIntentId: true,
+                stripeCustomerId: true,
+                currency: true,
+                paymentMethod: true,
+                paidAt: true,
+                updatedAt: true
+            }
+        })
+        return payments;
+    }
+
+    if(user && user.role === Role.LANDLORD) {
+        const payments = await prisma.payment.findMany({
+            where: {
+                rentalRequest: {
+                    property: {
+                        landlordId: userId,
+                    },
+                },
+            },
+            omit: {
+                stripePaymentIntentId: true,
+                stripeCustomerId: true,
+                currency: true,
+                paymentMethod: true,
+                paidAt: true,
+                updatedAt: true
+            }
+        
+        });
+        return payments 
+    }
+
+    if(user && user.role === Role.TENANT) {
+        const payments = await prisma.payment.findMany({
+            where: {
+                rentalRequest: {
+                    tenantId: userId
+                },
+            },
+            omit: {
+                stripePaymentIntentId: true,
+                stripeCustomerId: true,
+                currency: true,
+                paymentMethod: true,
+                paidAt: true,
+                updatedAt: true
+            }
+        })
+        return payments
+    }
+    else {
+        throw new Error("You are not Authorized")
+    }
+}
+
+
+const getPaymentDetails = async (id: string) => {
+    return await prisma.payment.findUniqueOrThrow({
+        where: {
+            id
+        }
+    })
+}
+
+
 
 export const paymentService = {
     createPaymentSession,
-    handleWebhook
+    handleWebhook,
+    getAllPayments,
+    getPaymentDetails
 }
