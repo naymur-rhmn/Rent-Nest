@@ -1,21 +1,6 @@
-import { Prisma } from "../../../generated/prisma/client";
-import { PropertyWhereInput } from "../../../generated/prisma/models";
+import { Prisma } from "../../../generated/prisma/client"; 
 import { prisma } from "../../lib/prisma"
-
-interface IPropertiesQuery extends PropertyWhereInput {
-    // title?: string,
-    // price?: string,
-    // city?: string,
-    // division?: string, 
-
-    searchTerm?: string,
-    limit?: string,
-    page?: string,
-    sortBy?: string,
-    sortOrder?: string,
-    maxRent?: string,
-    minRent?: string
-}
+import { IPropertiesQuery } from "./properties.interface";
  
 
 const getAllProperties = async (query: IPropertiesQuery) => {

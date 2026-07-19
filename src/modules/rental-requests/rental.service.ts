@@ -1,8 +1,14 @@
 import { prisma } from "../../lib/prisma";
+import { createRentalRequestValidator } from "../../validator/schema";
 import { IRentalRequest } from "./rental.interface"
 
 const submitRentalRequest = async(payload: IRentalRequest, tenantId: string) => {
-    const { message, askingRentMonth, moveInDate, propertyId } = payload;
+    const validate = createRentalRequestValidator.safeParse(payload)
+
+    if(!validate.success) {
+        throw new Error(validate.error.issues[0]?.message)
+    }
+    const { message, askingRentMonth, moveInDate, propertyId } = validate.data;
 
     const existingRequest = await prisma.rental_Request.findFirst({
         where: {
@@ -17,7 +23,7 @@ const submitRentalRequest = async(payload: IRentalRequest, tenantId: string) => 
 
     const rentalRequest = await prisma.rental_Request.create({
         data: {
-            moveInDate: new Date(moveInDate),
+            moveInDate,
             message,
             askingRentMonth,
             propertyId,

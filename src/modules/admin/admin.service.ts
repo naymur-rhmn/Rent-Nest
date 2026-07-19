@@ -1,4 +1,5 @@
 import { prisma } from "../../lib/prisma"
+import { updateUserStatusValidator } from "../../validator/schema"
 import { IUserStatus } from "./admin.interface"
 
 const getAllUsers = async () => {
@@ -10,6 +11,13 @@ const getAllUsers = async () => {
 }
 
 const updateUserStatus = async(payload : IUserStatus,userId: string) => {
+    const validate = updateUserStatusValidator.safeParse(payload)
+
+    if(!validate.success) {
+        throw new Error(validate.error.issues[0]?.message)
+    }
+    const {...validatedData} = validate.data
+
     await prisma.user.findUniqueOrThrow({
         where: {
             id: userId
@@ -21,7 +29,7 @@ const updateUserStatus = async(payload : IUserStatus,userId: string) => {
             id: userId
         },
         data: {
-            ...payload
+            ...validatedData
         }
         
     })

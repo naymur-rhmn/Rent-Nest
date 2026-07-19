@@ -1,6 +1,6 @@
 import { PropertyStatus, RentalStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma"
-import { createPropertyValidator } from "../../validator/schema";
+import { createPropertyValidator, updatePropertyValidator } from "../../validator/schema";
 import { IApproveReject, IProperty, IUpdateProperty } from "./landlord.interface"
 
 const createProperty = async(payload: IProperty, landlordId: string) => {
@@ -46,12 +46,31 @@ const createProperty = async(payload: IProperty, landlordId: string) => {
     return property
 }
 
-const updateProperty = async(payload : IUpdateProperty, propertyId: string) => {
-    const property = await prisma.property.findUniqueOrThrow({
+const getAllProperties = async(landlordId: string) => {
+    return await prisma.property.findMany({
         where: {
-            id : propertyId
+            landlordId 
         }
     })
+}
+
+const updateProperty = async(payload : IUpdateProperty, propertyId: string, landlordId : string) => {
+    const validate = updatePropertyValidator.safeParse(payload)
+
+    if(!validate.success) {
+        throw new Error(validate.error.issues[0]?.message)
+    }
+    const {...properyData} = validate.data
+
+    const property = await prisma.property.findUniqueOrThrow({
+        where: {
+            id : propertyId, 
+        }
+    })
+
+    if(property.landlordId !== landlordId) {
+        throw new Error("You are not authrorized to update this property")
+    }
  
     if(
         property.status !== PropertyStatus.AVAILABLE 
@@ -61,10 +80,10 @@ const updateProperty = async(payload : IUpdateProperty, propertyId: string) => {
         throw new Error(`Property must be ${PropertyStatus.AVAILABLE} or ${PropertyStatus.PENDING} state before update`)
     }
 
-    if (payload.categoryId) {
+    if (properyData.categoryId) {
         await prisma.category.findUniqueOrThrow({
             where: {
-                id: payload.categoryId,
+                id: properyData.categoryId,
             },
         });
     }
@@ -74,7 +93,7 @@ const updateProperty = async(payload : IUpdateProperty, propertyId: string) => {
             id: propertyId
         },
         data: {
-            ...payload
+            ...properyData
         },
         include: {
             category: true
@@ -82,6 +101,8 @@ const updateProperty = async(payload : IUpdateProperty, propertyId: string) => {
     })
     return updateProperty
 }
+
+
 
 const getAllRentalRequest = async(landlordId: string) => {
     const landlordProperties = await prisma.property.findMany({
@@ -119,14 +140,21 @@ const getAllRentalRequest = async(landlordId: string) => {
     return landlordProperties 
 }
 
-const approveOrRejectRentalReq = async(payload: IApproveReject,rentalId: string) => {
+const approveOrRejectRentalReq = async(payload: IApproveReject,rentalId: string, landlordId: string) => {
     const status = payload.status.trim().toUpperCase();
     
-    await prisma.rental_Request.findUniqueOrThrow({
+    const rentalReq = await prisma.rental_Request.findUniqueOrThrow({
         where: {
             id: rentalId
+        },
+        include: {
+            property: true
         }
     })
+
+    if(rentalReq.property.landlordId !== landlordId) {
+        throw new Error("You are not the property owner!")
+    }
 
     
     if(status === RentalStatus.APPROVED || status === RentalStatus.PENDING || status === RentalStatus.REJECTED) { 
@@ -145,12 +173,16 @@ const approveOrRejectRentalReq = async(payload: IApproveReject,rentalId: string)
     
 }
 
-const removeProperty = async(propertyId: string) => {
+const removeProperty = async(propertyId: string, landlordId: string) => {
     const property = await prisma.property.findUniqueOrThrow({
         where: {
             id: propertyId,
         },
     });
+
+    if(property.landlordId !== landlordId) {
+        throw new Error("You are not the property owner ")
+    }
 
     if (property.status === PropertyStatus.RENTED) {
         throw new Error("Rented property cannot be removed.");
@@ -180,6 +212,7 @@ const removeProperty = async(propertyId: string) => {
 
 export const landlordService = {
     createProperty,
+    getAllProperties,
     updateProperty,
     removeProperty,
     getAllRentalRequest,

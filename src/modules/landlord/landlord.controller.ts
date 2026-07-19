@@ -17,11 +17,25 @@ const createProperty = catchAsync(async(req, res) => {
     })
 })
 
+const getAllProperties = catchAsync(async(req, res) => {
+    const landlordId = req.user?.id;
+
+    const allProperties = await landlordService.getAllProperties(landlordId as string);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Properties retrived success",
+        data: {allProperties}
+    })
+})
+
 const updateProperty = catchAsync(async(req, res) => {
     const payload = req.body;
     const propertyId = req.params?.id;
+    const userId = req.user?.id;
 
-    const updatedProperty = await landlordService.updateProperty(payload, propertyId as string);
+    const updatedProperty = await landlordService.updateProperty(payload, propertyId as string, userId as string);
 
     sendResponse(res, {
         success: true,
@@ -42,9 +56,12 @@ const getAllRentalRequest = catchAsync(async(req, res) => {
         data: rentalRequests
     })
 })
+
 const approveOrRejectRentalReq = catchAsync(async(req, res) => {
     const rentalId = req.params?.id;
-    const result = await landlordService.approveOrRejectRentalReq(req.body ,rentalId as string)
+    const landlordId = req.user?.id;
+
+    const result = await landlordService.approveOrRejectRentalReq(req.body ,rentalId as string, landlordId as string)
 
     sendResponse(res, {
         success: true,
@@ -56,8 +73,9 @@ const approveOrRejectRentalReq = catchAsync(async(req, res) => {
 
 const removeProperty = catchAsync(async(req, res) => {
     const propertyId = req.params?.id;
+    const landlordId = req.user?.id;
 
-    const removedProperty = await landlordService.removeProperty(propertyId as string);
+    const removedProperty = await landlordService.removeProperty(propertyId as string, landlordId as string);
 
     sendResponse(res, {
         success: true,
@@ -69,6 +87,7 @@ const removeProperty = catchAsync(async(req, res) => {
 
 export const landlordController = {
     createProperty,
+    getAllProperties,
     updateProperty,
     removeProperty,
     getAllRentalRequest,

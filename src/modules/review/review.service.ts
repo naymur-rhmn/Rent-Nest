@@ -1,16 +1,23 @@
 import { PaymentStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma"
+import { createReviewValidator } from "../../validator/schema";
 import { IReviewPayload } from "./review.interface"
 
 const createReview = async (payload: IReviewPayload, tenantId: string) => {
-    console.log(payload, tenantId)
+    const validate = createReviewValidator.safeParse(payload);
+
+    if(!validate.success) {
+        throw new Error(validate.error.issues[0]?.message)
+    }
+    const {...validatedData} = validate.data;
+
     // check user payment success 
     // user can  review after payment success for a property
     const isPaymentSuccess = await prisma.payment.findFirst({
         where: {
             status: PaymentStatus.SUCCEEDED,
             rentalRequest: {
-                propertyId: payload.propertyId,
+                propertyId: validatedData.propertyId,
                 tenantId
             },
         },
@@ -22,7 +29,7 @@ const createReview = async (payload: IReviewPayload, tenantId: string) => {
 
     const existingReview = await prisma.review.findFirst({
         where: {
-            propertyId: payload.propertyId,
+            propertyId: validatedData.propertyId,
             tenantId
         }
     })
@@ -33,14 +40,12 @@ const createReview = async (payload: IReviewPayload, tenantId: string) => {
 
     const review = await prisma.review.create({
         data: {
-            ...payload,
+            ...validatedData,
             tenantId
         }
     })
     return review
 }
-
-
 
 export const reviewService = {
     createReview
