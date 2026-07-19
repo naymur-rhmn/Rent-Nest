@@ -2,12 +2,19 @@ import bcrypt from "bcryptjs";
 import { ILoginUser, IRegisterUser } from "./auth.interface"
 import config from "../../config";
 import { prisma } from "../../lib/prisma";
-import {   SignOptions } from "jsonwebtoken"
+import { SignOptions } from "jsonwebtoken"
 import { jwtUtils } from "../../utils/jwt";
+import { authLoginValidator, authRegisterValidator } from "../../validator/schema";
 
 
 const userRegistration = async (payload : IRegisterUser) => {
-    const {name, email, password, phone, role, occupation, age, profileImage, country, state, status } = payload;
+    const validation = authRegisterValidator.safeParse(payload);
+
+    if (!validation.success) {
+        throw new Error(validation.error.issues[0]?.message);
+    }
+
+    const {name, email, password, phone, role, occupation, age, profileImage, country, state } = validation.data;
 
     const URole = role?.trim().toUpperCase();
 
@@ -34,8 +41,7 @@ const userRegistration = async (payload : IRegisterUser) => {
             age,
             profileImage,
             country,
-            state,
-            status 
+            state, 
         }
     })
 
@@ -53,7 +59,12 @@ const userRegistration = async (payload : IRegisterUser) => {
 }
 
 const loginUser = async (payload: ILoginUser) => {
-    const {email, password} = payload;
+    const validate = authLoginValidator.safeParse(payload)
+    
+    if(!validate.success) {
+        throw new Error(validate.error.issues[0]?.message)
+    }
+    const {email, password} = validate.data;
 
     const user = await prisma.user.findUniqueOrThrow({
         where: {

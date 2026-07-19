@@ -10,7 +10,8 @@ import { rentalRouter } from "./modules/rental-requests/rental.route";
 import { adminRouter } from "./modules/admin/admin.router";
 import { notFound } from "./middleware/notFound";
 import { globalErrorHandler } from "./middleware/globalErrorHandler";
-import { paymentRouter } from "./modules/rental-payment/payment.route"; 
+import { paymentRouter } from "./modules/rental-payment/payment.route";        
+import { reviewRouter } from "./modules/review/review.route";
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use("/api/landlord", landloardRouter)
 app.use("/api/properties", propertiesRouter)
 app.use("/api/rentals", rentalRouter)
 app.use("/api/payments", paymentRouter)
+app.use("/api/reviews", reviewRouter)
 app.use("/api/admin", adminRouter)
 
 

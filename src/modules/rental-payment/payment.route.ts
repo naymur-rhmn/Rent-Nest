@@ -2,14 +2,14 @@ import { Router } from "express";
 import { paymentController } from "./payment.controller";
 import { auth } from "../../middleware/auth";
 import { Role } from "../../../generated/prisma/enums";
-import { validateRequest } from "../../middleware/validateRequest";
+import { validateApproveReq } from "../../middleware/validateRequest";
 
 const router = Router();
 
 router.post(
     "/create",
     auth(Role.ADMIN, Role.LANDLORD, Role.TENANT),
-    validateRequest() , 
+    validateApproveReq() , 
     paymentController.createPaymentSession
 )
 

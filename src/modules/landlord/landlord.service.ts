@@ -1,11 +1,21 @@
 import { PropertyStatus, RentalStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma"
+import { createPropertyValidator } from "../../validator/schema";
 import { IApproveReject, IProperty, IUpdateProperty } from "./landlord.interface"
 
 const createProperty = async(payload: IProperty, landlordId: string) => {
+    const validate = createPropertyValidator.safeParse(payload)
+
+    if(!validate.success) {
+        throw new Error(validate.error.issues[0]?.message)
+    }
+
+    const {...properyData} = validate.data
+ 
+
     await prisma.category.findUniqueOrThrow({
         where: {
-            id: payload.categoryId,
+            id: properyData.categoryId,
         },
     });
 
@@ -13,8 +23,8 @@ const createProperty = async(payload: IProperty, landlordId: string) => {
         where : {
             unique_landlord_property: {
                 landlordId,
-                title: payload.title.trim(),
-                address: payload.address.trim(),
+                title: properyData.title.trim(),
+                address: properyData.address.trim(),
             },
         }
     })
@@ -25,9 +35,7 @@ const createProperty = async(payload: IProperty, landlordId: string) => {
     
     const property = await prisma.property.create({
         data: {
-            ...payload,
-            title: payload.title.trim() ,
-            address: payload.address.trim(),
+            ...properyData,
             landlordId
         },
         include: {

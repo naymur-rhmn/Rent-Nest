@@ -5,13 +5,12 @@ export interface IRegisterUser {
     email: string,
     password: string,
     phone: string,
-    role: Role,
+    role?: Role,
     occupation?: string,
     age?: number,
     profileImage?: string,
-    country: string,
-    state?: string,
-    status: UserStatus,
+    country?: string,
+    state?: string, 
 }
 
 export interface ILoginUser {
@@ -19,12 +18,4 @@ export interface ILoginUser {
     password: string
 }
 
-// enum Role {
-//     LANDLORD,
-//     TENANT
-// }
-
-// enum UserStatus {
-//     BAN,
-//     UNBAN
-// }
+ 
