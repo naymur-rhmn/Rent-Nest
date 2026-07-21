@@ -218,21 +218,6 @@ npm start
 
 ---
 
-# Stripe Webhook
-
-Run the Stripe webhook listener
-
-```bash
-npm run stripe:webhook
-```
-
-This forwards Stripe events to:
-
-```
-http://localhost:5000/api/payments/confirm
-```
-
----
 
 # API Features
 
