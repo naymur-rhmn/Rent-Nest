@@ -1,4 +1,4 @@
-import { Prisma } from "../../../generated/prisma/client"; 
+import { Prisma, PropertyStatus } from "../../../generated/prisma/client"; 
 import { prisma } from "../../lib/prisma"
 import { IPropertiesQuery } from "./properties.interface";
  
@@ -13,6 +13,7 @@ const getAllProperties = async (query: IPropertiesQuery) => {
     const properties = await prisma.property.findMany({
         where: {
             isDeleted: false,
+            status: PropertyStatus.AVAILABLE,
 
             AND: [
                 // searching

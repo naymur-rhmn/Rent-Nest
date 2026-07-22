@@ -29,7 +29,7 @@ const createCategories = async (payload: ICategory | ICategory[]) => {
     });
 
     const existingNames = new Set(
-        existingCategories.map((category) => category.name)
+        existingCategories.map((category: any) => category.name)
     );
 
     const categoriesToCreate = uniqueCategories.filter(

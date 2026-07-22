@@ -2,12 +2,11 @@ import Stripe from "stripe"
 import config from "../../config"
 import { prisma } from "../../lib/prisma"
 import { stripe } from "../../lib/stripe"
-import { PaymentStatus, RentalStatus, Role } from "../../../generated/prisma/enums"
-import { handleCheckoutCompleted, handleCheckoutExpired } from "./payment.utils"
-// import { PaymentStatus } from "../../../generated/prisma/enums"
+import {  Role } from "../../../generated/prisma/enums"
+import { handleCheckoutCompleted, handleCheckoutExpired } from "./payment.utils" 
 
 const createPaymentSession = async (userId: string, rentalRequestId: string) => {
-    const transactionResult = await prisma.$transaction(async (tx) => {
+    const transactionResult = await prisma.$transaction(async (tx: any) => {
         const rentalRequest = await tx.rental_Request.findUniqueOrThrow({
             where: {
                 id: rentalRequestId, 
@@ -18,10 +17,7 @@ const createPaymentSession = async (userId: string, rentalRequestId: string) => 
                 property: true
             }
         }) 
-
-        // if(rentalRequest.status !== RentalStatus.APPROVED) {
-        //     throw new Error("You are not APPROVED yet!")
-        // }
+ 
 
         let stripeCustomerId = rentalRequest.tenant?.stripeCustomerId
         const productDescription = rentalRequest.property?.description.slice(0, 250)
@@ -90,7 +86,8 @@ const handleWebhook = async(payload: Buffer, signature: string) => {
         endpointSecret
     )
  
-switch (event.type) {
+ 
+    switch (event.type) {
         case "checkout.session.completed": {
             const session = event.data.object as Stripe.Checkout.Session;
             

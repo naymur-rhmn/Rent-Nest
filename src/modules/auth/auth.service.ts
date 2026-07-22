@@ -72,6 +72,7 @@ const loginUser = async (payload: ILoginUser) => {
         }
     })
 
+
     const decodedPass = await bcrypt.compare(password, user.password)
 
     if(!decodedPass) {

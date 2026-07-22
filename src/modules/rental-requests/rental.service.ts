@@ -1,3 +1,4 @@
+import { PropertyStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { createRentalRequestValidator } from "../../validator/schema";
 import { IRentalRequest } from "./rental.interface"
@@ -10,12 +11,24 @@ const submitRentalRequest = async(payload: IRentalRequest, tenantId: string) => 
     }
     const { message, askingRentMonth, moveInDate, propertyId } = validate.data;
 
+    const property = await prisma.property.findFirstOrThrow({
+        where: {
+            id: propertyId
+        }
+    })
+
+    if(property.status !== PropertyStatus.AVAILABLE) {
+        throw new Error("The property is not available for rentals")
+    }
+
+
     const existingRequest = await prisma.rental_Request.findFirst({
         where: {
             tenantId,
             propertyId
         }
     });
+
 
     if (existingRequest) {
         throw new Error("A rental request for this property and tenant already exists.");

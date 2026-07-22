@@ -8,10 +8,10 @@ import { categoriesRouter } from "./modules/categories/categories.route";
 import { propertiesRouter } from "./modules/properties/properties.route";
 import { rentalRouter } from "./modules/rental-requests/rental.route";
 import { adminRouter } from "./modules/admin/admin.router";
-import { notFound } from "./middleware/notFound";
-import { globalErrorHandler } from "./middleware/globalErrorHandler";
 import { paymentRouter } from "./modules/rental-payment/payment.route";        
 import { reviewRouter } from "./modules/review/review.route";
+import { notFound } from "./middleware/notFound";
+import { globalErrorHandler } from "./middleware/globalErrorHandler";
 
 const app = express();
 

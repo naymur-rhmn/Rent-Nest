@@ -1,5 +1,6 @@
 import { PropertyWhereInput } from "../../../generated/prisma/models";
 
+
 export interface IPropertiesQuery extends PropertyWhereInput {
     // title?: string,
     // price?: string,
