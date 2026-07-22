@@ -1,0 +1,793 @@
+{
+  "info": {
+    "_postman_id": "f9b339bd-9bb8-4a28-bfbe-008a35d971ae",
+    "name": "Rent Nest",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "54826115",
+    "_collection_link": "https://go.postman.co/collection/54826115-f9b339bd-9bb8-4a28-bfbe-008a35d971ae?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "User Registration",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Naym\",\r\n  \"email\": \"naym@gmail.com\",\r\n  \"password\": \"Password1234\",\r\n  \"phone\": \"+8801701010101\",\r\n  \"role\": \"tenant\" \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentnest}}/api/auth/register",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "### Registration\n\nRegisters a new user in the RentNest system. Provide the required user information in the request body. On successful registration, the API creates a new account and returns the user details along with a success message.\n\n**Request Body (JSON)**\n\n``` json\n{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"SecurePass123\",\n  \"phone\": \"+8801712345678\",\n  \"role\": \"TENANT\",\n  \"occupation\": \"Software Engineer\",\n  \"age\": 28,\n  \"profileImage\": \"https://example.com/profile.jpg\",\n  \"country\": \"Bangladesh\",\n  \"state\": \"Dhaka\"\n}\n\n ```\n\n**Required Fields**\n\n- `name` (string)\n    \n- `email` (string)\n    \n- `password` (string)\n    \n- `phone` (string)\n    \n\n**Optional Fields**\n\n- `role` (`TENANT(By Default)` | `LANDLORD`)\n    \n- `occupation` (string)\n    \n- `age` (number)\n    \n- `profileImage` (string - URL)\n    \n- `country` (string)\n    \n- `state` (string)"
+          },
+          "response": []
+        },
+        {
+          "name": "User Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"rentnest.admin@gmail.com\",\r\n  \"password\": \"Password1234\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentnest}}/api/auth/login",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "### User Login\n\nAuthenticates a user using email and password. After successful authentication, the API returns an access token and refresh token for accessing protected routes.\n\n**Request URL**\n\n``` http\nPOST /api/auth/login\n\n ```\n\n**Request Body (JSON)**\n\n``` json\n{\n  \"email\": \"naymurmn@gmail.com\",\n  \"password\": \"Password1234\"\n}\n\n ```\n\n**Data Format**\n\n``` typescript\n{\n  email: string;\n  password: string;\n}\n\n ```\n\n**Required Fields**\n\n- `email` (string) — Registered user email address\n    \n- `password` (string) — User account password\n    \n\n**Response Example**\n\n``` json\n{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"accessToken\": \"jwt_access_token\",\n    \"refreshToken\": \"jwt_refresh_token\"\n  }\n}\n\n ```\n\n**Response Data Includes**\n\n- `accessToken` — JWT token used to access protected API endpoints\n    \n- `refreshToken` — Token used to generate a new access token after expiration\n    \n\n**Authentication Flow**\n\n1. User submits email and password.\n    \n2. Server validates user credentials.\n    \n3. Server generates access and refresh tokens.\n    \n4. Client stores tokens and uses the access token for authenticated requests.\n    \n\n**Notes**\n\n- Invalid email or password will return an authentication error.\n    \n- The access token must be sent with protected API requests.\n    \n- User role and account status are included in the JWT payload for authorization."
+          },
+          "response": []
+        },
+        {
+          "name": "User Profile",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": " "
+            },
+            "url": {
+              "raw": "{{rentnest}}/api/auth/me",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
+            },
+            "description": "### Get User Profile\n\nRetrieves the profile information of the currently authenticated user. This endpoint returns personal details, account role, status, and profile information.\n\n**Request URL**\n\n``` http\nGET /api/auth/profile\n\n ```\n\n**Request Body**\n\nNo request body is required.\n\n**Response Example**\n\n``` json\n{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"User Profile Retrieved Successfully\",\n  \"data\": {\n    \"user\": {\n      \"id\": \"9a6ee824-7889-4f51-b680-816805de3eb7\",\n      \"name\": \"Jabbar\",\n      \"email\": \"Jabbar@gmail.com\",\n      \"phone\": \"+8801701010101\",\n      \"role\": \"TENANT\",\n      \"occupation\": null,\n      \"age\": null,\n      \"profileImage\": null,\n      \"country\": null,\n      \"state\": null,\n      \"stripeCustomerId\": null,\n      \"status\": \"UNBAN\",\n      \"createdAt\": \"2026-07-22T07:57:35.865Z\",\n      \"updatedAt\": \"2026-07-22T07:57:35.865Z\"\n    }\n  }\n}\n\n ```\n\n**Response Data Includes**\n\n- `id` — Unique user identifier\n    \n- `name` — User name\n    \n- `email` — User email address\n    \n- `phone` — Contact number\n    \n- `role` — User role (`ADMIN`, `LANDLORD`, `TENANT`)\n    \n- `occupation` — User profession\n    \n- `age` — User age\n    \n- `profileImage` — Profile image URL\n    \n- `country` — User country\n    \n- `state` — User state/division\n    \n- `stripeCustomerId` — Stripe customer reference (if available)\n    \n- `status` — Account status (`UNBAN` / `BAN`)\n    \n- `createdAt` — Account creation timestamp\n    \n- `updatedAt` — Last update timestamp\n    \n\n**Notes**\n\n- Authentication is required for this endpoint.\n    \n- User information is retrieved from the authenticated session/token.\n    \n- Users can only view their own profile information."
+          },
+          "response": []
+        },
+        {
+          "name": "User Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{rentnest}}/api/auth/logout",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            },
+            "description": "### User Logout\n\nLogs out the authenticated user by clearing the authentication session/token stored in the browser. After successful logout, the user needs to authenticate again to access protected routes.\n\n**Request URL**\n\n``` http\nPOST /api/auth/logout\n\n ```\n\n**Request Body**\n\nNo request body is required.\n\n``` json\n{}\n\n ```\n\n**Response Example**\n\n``` json\n{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"User logout successfully\",\n  \"data\": null\n}\n\n ```\n\n**Notes**\n\n- User authentication is handled through the auth middleware.\n    \n- Logout clears the authentication cookie/session from the client.\n    \n- After logout, protected API endpoints will require a new login session."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "categories",
+      "item": [
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"House\"\r\n}\r\n\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentnest}}/api/categories",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "categories"
+              ]
+            },
+            "description": "### Create Category\n\nAllows an admin to create one or multiple property categories in a single request. This endpoint accepts an array of category objects and stores them in the system.\n\n**Request URL**\n\n``` http\nGET /api/categories\n\n ```\n\n**Request Body (JSON)**\n\n``` json\n[\n  {\n    \"name\": \"Apartment\"\n  },\n  {\n    \"name\": \"House\"\n  },\n  {\n    \"name\": \"Studio\"\n  }\n]\n\n ```\n\n**Single Category Example**\n\n``` json\n  {\n    \"name\": \"Luxury Villa\"\n  }\n\n ```\n\n**Data Format**\n\n``` typescript\n{\n  name: string\n}\n\n ```\n\n**Res type**\n\n{  \n\"success\": true,  \n\"statusCode\": 201,  \n\"message\": \"Categories created successfully\",  \n\"data\": {  \n\"categories\": \\[  \n{  \n\"id\": \"6bfdccfa-5dcf-417a-8533-a12f66075517\",  \n\"name\": \"OFFICE\",  \n\"createdAt\": \"2026-07-16T20:53:25.546Z\"  \n},  \n{  \n\"id\": \"4693df66-5fb6-4731-bf2a-b068343dd820\",  \n\"name\": \"APARTMENT\",  \n\"createdAt\": \"2026-07-16T20:53:25.546Z\"  \n}  \n\\]  \n}  \n}\n\n**Required Fields**\n\n- `name` (string) — Category name\n    \n\n**Notes**\n\n- Admin can create a single category or multiple categories at once.\n    \n- Category names should be unique"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentnest}}/api/categories/3d6b7b93-d567-4615-840a-7f603d048950",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "categories",
+                "3d6b7b93-d567-4615-840a-7f603d048950"
+              ]
+            },
+            "description": "### Delete Category\n\nAllows an admin to delete an existing property category from the system using the category ID. This endpoint permanently removes the category if it exists and the user has admin privileges. If category has any property connected then it's would deny to delete the category.\n\n**Request URL**\n\n``` http\nDELETE /api/categories/:id\n\n ```\n\n**URL Parameter**\n\n| Parameter | Type | Description |\n| --- | --- | --- |\n| `id` | string | Unique identifier of the category to delete |\n\n**Example Request**\n\n``` http\nDELETE /api/categories/550e8400-e29b-41d4-a716-446655440000\n\n ```\n\n**Response Example**\n\n``` json\n{\n  \"success\": true, \n  \"statusCode\": 200,\n  \"message\": \"Category deleted successfully\"\n}\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Categories",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": " {\r\n    \"name\": \"Apartment\"\r\n }"
+            },
+            "url": {
+              "raw": "{{rentnest}}/api/categories",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "categories"
+              ]
+            },
+            "description": "### **Get All Categories**\n\nRetrieves a list of all available property categories from the RentNest system. This endpoint returns all categories that can be used for property listings.\n\n**Request URL**\n\n``` http\nGET /api/categories\n\n ```\n\n**Response Example**\n\n``` json\n{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Categories retrieved successfully\",\n  \"data\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"name\": \"Apartment\",\n      \"createdAt\": \"2026-07-22T10:30:00.000Z\",\n      \"updatedAt\": \"2026-07-22T10:30:00.000Z\"\n    },\n    {\n      \"id\": \"660e8400-e29b-41d4-a716-446655440001\",\n      \"name\": \"House\",\n      \"createdAt\": \"2026-07-22T10:35:00.000Z\",\n      \"updatedAt\": \"2026-07-22T10:35:00.000Z\"\n    }\n  ]\n}\n\n ```"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Landlord",
+      "item": [
+        {
+          "name": "Create Properties",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"Eco Resort Cottage Rental\",\r\n    \"description\": \"Beautiful eco-friendly wooden resort cottage available for vacation stays. Surrounded by natural tea gardens.\",\r\n    \"rent\": \"180.00\",\r\n    \"bedrooms\": 2,\r\n    \"bathrooms\": 2,\r\n    \"area\": \"800.00\",\r\n    \"gMapLocation\": \"https://goo.gl\",\r\n    \"address\": \"Sreemangal Road\",\r\n    \"city\": \"Sreemangal\",\r\n    \"division\": \"Sylhet\",\r\n    \"country\": \"Bangladesh\",\r\n    \"rentalType\": \"monthly\",\r\n    \"availableRentalPeriodMonth\": 6,\r\n    \"categoryId\": \"72ca9ee8-b05c-4d75-bec1-3b89aec86dab\"\r\n  }\r\n\r\n\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentnest}}/api/landlord/properties",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "landlord",
+                "properties"
+              ]
+            },
+            "description": "### Create Property\n\nAllows a landlord to create a new property listing in the RentNest system. Only users with the **LANDLORD** role can access this endpoint. Provide property details along with the category and landlord information.\n\n**Request URL**\n\n``` http\nPOST /api/landlord/properties\n\n ```\n\n**Request Body (JSON)**\n\n``` json\n{\n  \"title\": \"Modern 2 Bedroom Apartment\",\n  \"description\": \"A spacious apartment with modern facilities and a convenient location.\",\n  \"rent\": 25000,\n  \"bedrooms\": 2,\n  \"bathrooms\": 2,\n  \"address\": \"House 25, Road 10\",\n  \"city\": \"Dhaka\",\n  \"division\": \"Dhaka\",\n  \"country\": \"Bangladesh\",\n  \"landlordId\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"categoryId\": \"660e8400-e29b-41d4-a716-446655440001\"\n}\n\n ```\n\n**Data Format**\n\n``` typescript\n{\n  title: string;\n  description: string;\n  rent: number;\n  bedrooms?: number;\n  bathrooms?: number;\n  address: string;\n  city: string;\n  division: string;\n  country: string;\n  landlordId: string;\n  categoryId: string;\n}\n\n ```\n\n**Required Fields**\n\n- `title` (string)\n    \n- `description` (string)\n    \n- `rent` (number)\n    \n- `address` (string)\n    \n- `city` (string)\n    \n- `division` (string)\n    \n- `country` (string)\n    \n- `landlordId` (string)\n    \n- `categoryId` (string)\n    \n\n**Optional Fields**\n\n- `bedrooms` (number)\n    \n- `bathrooms` (number)\n    \n\n**Notes**\n\n- Only users with the `LANDLORD` role can create properties.\n    \n- `categoryId` must reference an existing property category.\n    \n- `landlordId` must belong to the authenticated landlord user."
+          },
+          "response": []
+        },
+        {
+          "name": "Update property",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"rent\": 450\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentnest}}/api/landlord/properties/a1058116-cc06-4f77-9dbb-e0088e822ac6",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "landlord",
+                "properties",
+                "a1058116-cc06-4f77-9dbb-e0088e822ac6"
+              ]
+            },
+            "description": "### Update Property\n\nAllows a landlord to update an existing property listing. This endpoint uses a dynamic property ID route and accepts partial updates, meaning only the fields that need to be changed should be provided.\n\n**Request URL**\n\n``` http\nPUT /api/landlord/properties/:id\n\n ```\n\n**URL Parameter**\n\n| Parameter | Type | Description |\n| --- | --- | --- |\n| `id` | string | Unique identifier of the property to update |\n\n**Request Body (JSON)**\n\n``` json\n{\n  \"title\": \"Updated Modern Apartment\",\n  \"description\": \"Updated description with better facilities.\",\n  \"rent\": 28000,\n  \"bedrooms\": 3,\n  \"bathrooms\": 2,\n  \"address\": \"House 30, Road 5\",\n  \"city\": \"Dhaka\",\n  \"division\": \"Dhaka\",\n  \"country\": \"Bangladesh\",\n  \"categoryId\": \"660e8400-e29b-41d4-a716-446655440001\"\n}\n\n ```\n\n**Data Format**\n\n``` typescript\n{\n  title?: string;\n  description?: string;\n  rent?: number;\n  bedrooms?: number;\n  bathrooms?: number;\n  address?: string;\n  city?: string;\n  division?: string;\n  country?: string;\n  categoryId?: string;\n}\n\n ```\n\n**Notes**\n\n- Only provided fields will be updated.\n    \n- The property ID must be passed as a route parameter.\n    \n- Only the property owner (landlord) can update their property.\n    \n- `categoryId` must reference an existing property category."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Property",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentnest}}/api/landlord/properties/bfaf2e42-f3fe-40a8-b7e0-0b61b060bb52",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "landlord",
+                "properties",
+                "bfaf2e42-f3fe-40a8-b7e0-0b61b060bb52"
+              ]
+            },
+            "description": "### Delete Property\n\nAllows a landlord to delete an existing property listing from the RentNest system using the property ID. The property ID is passed as a dynamic route parameter.\n\n**Request URL**\n\n``` http\nDELETE /api/landlord/properties/:id\n\n ```\n\n**Route Parameter**\n\n| Parameter | Type | Description |\n| --- | --- | --- |\n| `id` | string | Unique identifier of the property to delete |\n\n**Example Request**\n\n``` http\nDELETE /api/landlord/properties/550e8400-e29b-41d4-a716-446655440000\n\n ```\n\n**Response Example**\n\n``` json\n{\n   \"success\": true,\n   \"statusCode\": 200,\n   \"message\": \"removed successfully\",\n   \"data\": []\n}\n\n ```\n\n**Notes**\n\n- The property ID must be provided as a route parameter.\n    \n- Only the property owner (landlord) can delete their property.\n    \n- Deleting a property will remove the property listing from the system."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Rental Request",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rentnest}}/api/landlord/requests",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "landlord",
+                "requests"
+              ]
+            },
+            "description": "### Get All Rental Requests\n\nRetrieves all rental requests submitted for properties owned by the authenticated landlord. This endpoint allows landlords to view incoming tenant rental requests.\n\n**Request URL**\n\n``` http\nGET /api/landlord/requests\n\n ```\n\n**Response Example**\n\n``` json\n{\n    \"success\": true,\n    \"statusCode\": 200,\n    \"message\": \"Rental requests retrieved successfully\",\n  \"data\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"propertyId\": \"660e8400-e29b-41d4-a716-446655440001\",\n      \"tenantId\": \"770e8400-e29b-41d4-a716-446655440002\",\n      \"status\": \"PENDING\",\n      \"message\": \"I am interested in renting this property.\",\n      \"createdAt\": \"2026-07-22T10:30:00.000Z\"\n    }\n  ]\n}\n\n ```\n\n**Notes**\n\n- Only authenticated landlords can access this endpoint.\n    \n- Returns rental requests for properties owned by the logged-in landlord.\n    \n- Request authorization is handled through the authentication middleware."
+          },
+          "response": []
+        },
+        {
+          "name": "Approve or Reject Rental Request",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\": \"approved\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentnest}}/api/landlord/requests/46650235-9674-4cd2-9bce-2d1745ac9964",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "landlord",
+                "requests",
+                "46650235-9674-4cd2-9bce-2d1745ac9964"
+              ]
+            },
+            "description": "### Approve or Reject Rental Request\n\nAllows a landlord to update the status of a rental request. The landlord can either approve or reject a tenant's rental request.\n\n**Request URL**\n\n``` http\nPATCH /api/landlord/requests/:id\n\n ```\n\n**Route Parameter**\n\n| Parameter | Type | Description |\n| --- | --- | --- |\n| `id` | string | Unique identifier of the rental request |\n\n**Request Body (JSON)**\n\n``` json\n{\n  \"status\": \"approved\"\n}\n\n ```\n\n**Data Format**\n\n``` typescript\n{\n  status: \"approved\" | \"rejected\";\n}\n\n ```\n\n**Allowed Values**\n\n- `approved` — Accept the rental request\n    \n- `rejected` — Decline the rental request\n    \n\n**Example Request**\n\n``` http\nPATCH /api/landlord/requests/550e8400-e29b-41d4-a716-446655440000\n\n ```\n\n**Response Example**\n\n``` json\n{\n    \"success\": true,\n    \"statusCode\": 200,\n    \"message\": \"Operation Successfull\",\n    \"data\": {\n        \"id\": \"98e2826a-03e9-4a35-9ddb-b0f48dd643f5\",\n        \"status\": \"APPROVED\",\n        \"message\": \"Rental message for rent property\",\n        \"askingRentMonth\": 6,\n        \"moveInDate\": null,\n        \"propertyId\": \"2cea68c0-c4e0-42d5-ae82-2061680da01e\",\n        \"tenantId\": \"9a6ee824-7889-4f51-b680-816805de3eb7\",\n        \"createdAt\": \"2026-07-22T09:44:49.406Z\"\n    }\n}\n\n ```\n\n**Notes**\n\n- Only the property owner (landlord) can approve or reject rental requests.\n    \n- Request authorization is handled through the authentication middleware."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rentnest}}/api/landlord/properties",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "landlord",
+                "properties"
+              ]
+            },
+            "description": "### Get All Landlord Properties\n\nRetrieves all properties created by the authenticated landlord. This endpoint allows landlords to view and manage their own property listings.\n\n**Request URL**\n\n``` http\nGET /api/landlord/properties\n\n ```\n\n**Response Example**\n\n``` json\n{\n  \"success\": true,\n  \"message\": \"Properties retrieved successfully\",\n  \"data\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"title\": \"Modern 2 Bedroom Apartment\",\n      \"description\": \"A spacious apartment with modern facilities.\",\n      \"rent\": 25000,\n      \"bedrooms\": 2,\n      \"bathrooms\": 2,\n      \"address\": \"House 25, Road 10\",\n      \"city\": \"Dhaka\",\n      \"division\": \"Dhaka\",\n      \"country\": \"Bangladesh\",\n      \"categoryId\": \"660e8400-e29b-41d4-a716-446655440001\",\n      \"createdAt\": \"2026-07-22T10:30:00.000Z\",\n      \"updatedAt\": \"2026-07-22T10:30:00.000Z\"\n    }\n  ]\n}\n\n ```\n\n**Notes**\n\n- Only authenticated landlords can access this endpoint.\n    \n- Returns only the properties created by the logged-in landlord.\n    \n- Request authorization is handled through the authentication middleware."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Properties",
+      "item": [
+        {
+          "name": "Get All Properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rentnest}}/api/properties",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ],
+              "query": [
+                {
+                  "key": "searchTerm",
+                  "value": "balcony",
+                  "disabled": true
+                },
+                {
+                  "key": "title",
+                  "value": "Residential Land Plot Near Airport",
+                  "disabled": true
+                },
+                {
+                  "key": "category",
+                  "value": "apartment",
+                  "disabled": true
+                },
+                {
+                  "key": "minRent",
+                  "value": "850",
+                  "disabled": true
+                },
+                {
+                  "key": "maxRent",
+                  "value": "1200",
+                  "disabled": true
+                },
+                {
+                  "key": "city",
+                  "value": "gazipur",
+                  "disabled": true
+                },
+                {
+                  "key": "division",
+                  "value": "dhaka",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "5",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "sortBy",
+                  "value": "createdAt",
+                  "disabled": true
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc",
+                  "description": "asc / desc",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "### Get All Properties\n\nRetrieves all available property listings from the RentNest system. This endpoint is publicly accessible and can be used by both authenticated and unauthenticated users to browse properties.\n\n**Request URL**\n\n``` http\nGET /api/properties\n\n ```\n\n**Response Example**\n\n``` json\n{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Properties fetched successfully\",\n  \"data\": [\n    {\n      \"id\": \"c417512a-f383-477c-a321-c6ee12d61f41\",\n      \"landlordId\": \"20ac96ec-a71f-4a24-8d41-352bea685ccb\",\n      \"categoryId\": \"bf40ff68-0e57-40ce-a6c4-3f5900b2e6d0\",\n      \"title\": \"Storage Warehouse\",\n      \"description\": \"Industrial warehouse suitable for storage and logistics operations.\",\n      \"rent\": \"1200\",\n      \"bedrooms\": 0,\n      \"bathrooms\": 2,\n      \"area\": \"4000\",\n      \"gMapLocation\": \"https://maps.google.com/?q=Gazipur\",\n      \"address\": \"Industrial Area, Gazipur\",\n      \"city\": \"Gazipur\",\n      \"division\": \"Dhaka\",\n      \"country\": \"Bangladesh\",\n      \"status\": \"AVAILABLE\",\n      \"rentalType\": \"MONTHLY\",\n      \"availableRentalPeriodMonth\": 8,\n      \"category\": {\n        \"id\": \"bf40ff68-0e57-40ce-a6c4-3f5900b2e6d0\",\n        \"name\": \"WAREHOUSE\"\n      },\n      \"reviews\": []\n    }\n  ]\n}\n\n ```\n\n**Response Data Includes**\n\n- Property details:\n    \n    - `id`\n        \n    - `landlordId`\n        \n    - `categoryId`\n        \n    - `title`\n        \n    - `description`\n        \n    - `rent`\n        \n    - `bedrooms`\n        \n    - `bathrooms`\n        \n    - `area`\n        \n    - `gMapLocation`\n        \n    - `address`\n        \n    - `city`\n        \n    - `division`\n        \n    - `country`\n        \n    - `status`\n        \n    - `rentalType`\n        \n    - `availableRentalPeriodMonth`\n        \n    - `createdAt`\n        \n    - `updatedAt`\n        \n- Category information:\n    \n    - `id`\n        \n    - `name`\n        \n- Property reviews:\n    \n    - `id`\n        \n    - `tenantId`\n        \n    - `rating`\n        \n    - `comment`\n        \n    - `createdAt`\n        \n    - `updatedAt`\n        \n\n**Notes**\n\n- This endpoint is open to everyone; authentication is not required.\n    \n- Returns all available property listings.\n    \n- Includes related category and review information.\n    \n- Users can browse properties before authentication or login."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Property Details by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rentnest}}/api/properties/2cea68c0-c4e0-42d5-ae82-2061680da01e",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "2cea68c0-c4e0-42d5-ae82-2061680da01e"
+              ]
+            },
+            "description": "### Get Property Details\n\nRetrieves detailed information about a specific property using the property ID. This endpoint provides complete property details, including category information and customer reviews.\n\n**Request URL**\n\n``` http\nGET /api/properties/:id\n\n ```\n\n**Route Parameter**\n\n| Parameter | Type | Description |\n| --- | --- | --- |\n| `id` | string | Unique identifier of the property |\n\n**Example Request**\n\n``` http\nGET /api/properties/2cea68c0-c4e0-42d5-ae82-2061680da01e\n\n ```\n\n**Response Example**\n\n``` json\n{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Property details fetched successfully\",\n  \"data\": {\n    \"id\": \"2cea68c0-c4e0-42d5-ae82-2061680da01e\",\n    \"landlordId\": \"20ac96ec-a71f-4a24-8d41-352bea685ccb\",\n    \"categoryId\": \"6bfdccfa-5dcf-417a-8533-a12f66075517\",\n    \"title\": \"Fully Furnished Office Space in Banani\",\n    \"description\": \"Premium office space with modern interior design, conference room, reception area, and high-speed internet connectivity.\",\n    \"rent\": \"1200\",\n    \"bedrooms\": null,\n    \"bathrooms\": 2,\n    \"area\": \"2200\",\n    \"gMapLocation\": \"https://maps.google.com/?q=Banani,Dhaka\",\n    \"address\": \"Road 11, Banani Commercial Area\",\n    \"city\": \"Dhaka\",\n    \"division\": \"Dhaka\",\n    \"country\": \"Bangladesh\",\n    \"status\": \"AVAILABLE\",\n    \"rentalType\": \"MONTHLY\",\n    \"availableRentalPeriodMonth\": 12,\n    \"category\": {\n      \"id\": \"6bfdccfa-5dcf-417a-8533-a12f66075517\",\n      \"name\": \"OFFICE\"\n    },\n    \"reviews\": [\n      {\n        \"id\": \"9b901fcf-2e6d-4ad4-8aa4-f37927261df2\",\n        \"tenantId\": \"6330cc3c-b304-4233-b75b-c35b256c52f9\",\n        \"rating\": 4,\n        \"comment\": \"Dummy Comment\",\n        \"createdAt\": \"2026-07-17T21:11:33.185Z\"\n      }\n    ],\n    \"createdAt\": \"2026-07-16T21:22:15.722Z\",\n    \"updatedAt\": \"2026-07-16T21:33:52.255Z\"\n  }\n}\n\n ```\n\n**Response Data Includes**\n\n- Property information:\n    \n    - `id`\n        \n    - `title`\n        \n    - `description`\n        \n    - `rent`\n        \n    - `bedrooms`\n        \n    - `bathrooms`\n        \n    - `area`\n        \n    - `address`\n        \n    - `city`\n        \n    - `division`\n        \n    - `country`\n        \n    - `status`\n        \n    - `rentalType`\n        \n    - `availableRentalPeriodMonth`\n        \n- Category details:\n    \n    - `id`\n        \n    - `name`\n        \n- Review details:\n    \n    - `id`\n        \n    - `tenantId`\n        \n    - `rating`\n        \n    - `comment`\n        \n    - `createdAt`\n        \n\n**Notes**\n\n- The property ID must be provided as a route parameter.\n    \n- This endpoint is publicly accessible; authentication is not required.\n    \n- Returns detailed information about a single property with related category and review data."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Rentals",
+      "item": [
+        {
+          "name": "Create Rental Req",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"moveInDate\": \"2026-08-07\",\r\n    \"message\": \"Rental message for rent your property\",\r\n    \"askingRentMonth\": 6,\r\n    \"propertyId\": \"6d028bb7-b8ea-455a-abf5-7dadb31eba56\"\r\n}\r\n\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentnest}}/api/rentals",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "rentals"
+              ]
+            },
+            "description": "### Create Rental Request\n\nAllows a tenant to submit a rental request for a property. The tenant can provide their preferred move-in date, rental duration, and message for the landlord.\n\n**Request URL**\n\n``` http\nPOST /api/rentals\n\n ```\n\n**Request Body (JSON)**\n\n``` json\n{\n  \"moveInDate\": \"2026-08-01\",\n  \"message\": \"I am interested in renting this property. Please consider my request.\",\n  \"propertyId\": \"2cea68c0-c4e0-42d5-ae82-2061680da01e\",\n  \"askingRentMonth\": 6\n}\n\n ```\n\n**Data Format**\n\n``` typescript\n{\n  moveInDate: string;\n  message: string;\n  propertyId: string;\n  askingRentMonth: number;\n}\n\n ```\n\n**Required Fields**\n\n- `moveInDate` (string) — Expected move-in date (must be forward date not previous date)\n    \n- `message` (string) — Message for the landlord\n    \n- `propertyId` (string) — ID of the property to rent\n    \n- `askingRentMonth` (number) — Requested rental duration in months\n    \n\n**Response Example**\n\n``` json\n{\n  \"success\": true,\n  \"statusCode\": 201,\n  \"message\": \"Rental request submitted successfully\",\n  \"data\": {\n    \"rentalRequest\": {\n      \"id\": \"98e2826a-03e9-4a35-9ddb-b0f48dd643f5\",\n      \"status\": \"PENDING\",\n      \"message\": \"Rental message for rent property\",\n      \"askingRentMonth\": 6,\n      \"moveInDate\": null,\n      \"propertyId\": \"2cea68c0-c4e0-42d5-ae82-2061680da01e\",\n      \"tenantId\": \"9a6ee824-7889-4f51-b680-816805de3eb7\",\n      \"createdAt\": \"2026-07-22T09:44:49.406Z\"\n    }\n  }\n}\n\n ```\n\n**Notes**\n\n- Only authenticated tenants can create rental requests.\n    \n- `tenantId` is automatically taken from the authenticated user.\n    \n- The request status is initially set to `PENDING`.\n    \n- Request authorization is handled through the authentication middleware."
+          },
+          "response": []
+        },
+        {
+          "name": "Get all Rentals",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rentnest}}/api/rentals",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "rentals"
+              ]
+            },
+            "description": "Get All Rental Requests\n\nRetrieves all rental requests submitted by the authenticated tenant. This endpoint allows tenants to view their rental request history along with related property details.\n\n**Request URL**\n\n``` http\nGET /api/rentals\n\n ```\n\n**Response Example**\n\n``` json\n{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Rental requests retrieved successfully\",\n  \"data\": {\n    \"rentalRequests\": [\n      {\n        \"id\": \"98e2826a-03e9-4a35-9ddb-b0f48dd643f5\",\n        \"moveInDate\": null,\n        \"message\": \"Rental message for rent property\",\n        \"status\": \"PENDING\",\n        \"property\": {\n          \"id\": \"2cea68c0-c4e0-42d5-ae82-2061680da01e\",\n          \"title\": \"Fully Furnished Office Space in Banani\",\n          \"rent\": \"1200\",\n          \"category\": {\n            \"name\": \"OFFICE\"\n          }\n        }\n      }\n    ]\n  }\n}\n\n ```\n\n**Response Data Includes**\n\n- Rental request information:\n    \n    - `id`\n        \n    - `moveInDate`\n        \n    - `message`\n        \n    - `status`\n        \n- Property details:\n    \n    - `id`\n        \n    - `title`\n        \n    - `rent`\n        \n    - `category`\n        \n\n**Notes**\n\n- Only authenticated tenants can access this endpoint.\n    \n- Returns rental requests created by the logged-in tenant.\n    \n- Request authorization is handled through the authentication middleware."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Rantal Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rentnest}}/api/rentals/98e2826a-03e9-4a35-9ddb-b0f48dd643f5",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "rentals",
+                "98e2826a-03e9-4a35-9ddb-b0f48dd643f5"
+              ]
+            },
+            "description": "### Get Rental Request Details\n\nRetrieves detailed information about a specific rental request using the rental request ID. This endpoint provides complete rental request details along with the associated property information.\n\n**Request URL**\n\n``` http\nGET /api/rentals/:id\n\n ```\n\n**Route Parameter**\n\n| Parameter | Type | Description |\n| --- | --- | --- |\n| `id` | string | Unique identifier of the rental request |\n\n**Example Request**\n\n``` http\nGET /api/rentals/98e2826a-03e9-4a35-9ddb-b0f48dd643f5\n\n ```\n\n**Response Example**\n\n``` json\n{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Rental request details retrieved successfully\",\n  \"data\": {\n    \"rentalRequestDetails\": {\n      \"id\": \"98e2826a-03e9-4a35-9ddb-b0f48dd643f5\",\n      \"message\": \"Rental message for rent property\",\n      \"moveInDate\": null,\n      \"status\": \"PENDING\",\n      \"property\": {\n        \"id\": \"2cea68c0-c4e0-42d5-ae82-2061680da01e\",\n        \"title\": \"Fully Furnished Office Space in Banani\",\n        \"description\": \"Premium office space with modern interior design, conference room, reception area, and high-speed internet connectivity. Ideal for startups and corporate teams.\",\n        \"rent\": \"1200\",\n        \"address\": \"Road 11, Banani Commercial Area\",\n        \"city\": \"Dhaka\",\n        \"country\": \"Bangladesh\",\n        \"division\": \"Dhaka\",\n        \"bedrooms\": null,\n        \"bathrooms\": 2,\n        \"status\": \"AVAILABLE\",\n        \"category\": {\n          \"name\": \"OFFICE\"\n        }\n      }\n    }\n  }\n}\n\n ```\n\n**Notes**\n\n- The rental request ID must be provided as a route parameter.\n    \n- Only authenticated users can access this endpoint.\n    \n- Returns complete rental request details with associated property information.\n    \n- Request authorization is handled through the authentication middleware."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "payment",
+      "item": [
+        {
+          "name": "Create Payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"rentalRequestId\": \"551b6c2f-0928-4053-a737-d024aa8b7a0b\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentnest}}/api/payments/create",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "create"
+              ]
+            },
+            "description": "### Create Payment Session\n\nCreates a Stripe checkout payment session for an approved rental request. Before making payment, the tenant's rental request must be approved by the landlord. After successful payment, the payment status and rental/property status are updated through the Stripe webhook.\n\n**Request URL**\n\n``` http\nPOST /api/payments/create\n\n ```\n\n**Request Body (JSON)**\n\n``` json\n{\n  \"rentalRequestId\": \"98e2826a-03e9-4a35-9ddb-b0f48dd643f5\"\n}\n\n ```\n\n**Data Format**\n\n``` typescript\n{\n  rentalRequestId: string;\n}\n\n ```\n\n**Required Fields**\n\n- `rentalRequestId` (string) — ID of the approved rental request\n    \n\n**Payment Flow**\n\n1. Tenant submits a rental request.\n    \n2. Landlord approves the rental request.\n    \n3. Tenant creates a payment session using the rental request ID.\n    \n4. API returns a Stripe checkout session URL.\n    \n5. Tenant completes payment on Stripe.\n    \n6. Stripe webhook handles payment events:\n    \n    - `checkout.session.completed` → Saves payment details, updates rental request status, and marks the property as rented.\n        \n    - `checkout.session.expired` → Updates payment status as failed.\n        \n\n**Response Example**\n\n``` json\n{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Payment Session Created Successfully\",\n  \"data\": {\n    \"session_url\": \"https://checkout.stripe.com/c/pay/cs_test_example\"\n  }\n}\n\n ```\n\n**Webhook Event Handling**\n\n### Checkout Completed\n\nWhen Stripe sends the `checkout.session.completed` event:\n\n- Creates or updates payment record.\n    \n- Stores:\n    \n    - Stripe payment intent ID\n        \n    - Customer ID\n        \n    - Payment amount\n        \n    - Currency\n        \n    - Payment method\n        \n    - Payment status\n        \n    - Payment date\n        \n- Updates rental request status to `APPROVED`.\n    \n- Updates property status to `RENTED`.\n    \n\n### Checkout Expired\n\nWhen Stripe sends the `checkout.session.expired` event:\n\n- Updates the payment status to `FAILED`.\n    \n\n**Notes**\n\n- Only approved rental requests can proceed to payment.\n    \n- Payment processing is handled securely through Stripe Checkout.\n    \n- Stripe webhook is responsible for final payment confirmation and status updates."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Paymetns",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rentnest}}/api/payments",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "payments"
+              ]
+            },
+            "description": "### Get All Payments\n\nRetrieves payment records based on the authenticated user's role. The visibility of payments depends on the user's role:\n\n- **Admin** → Can view all payments from all landlords and tenants.\n    \n- **Landlord** → Can view payments related to their own property rentals.\n    \n- **Tenant** → Can view payments made by themselves.\n    \n\n**Request URL**\n\n``` http\nGET /api/payments\n\n ```\n\n**Response Example**\n\n``` json\n{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Payments retrieved successfully\",\n  \"data\": {\n    \"allPayments\": [\n      {\n        \"id\": \"4c11ed94-e042-459b-ad55-80c8c61603ee\",\n        \"rentalRequestId\": \"c62d0112-0508-4b88-b3c7-b6a1528d5424\",\n        \"amount\": \"750\",\n        \"status\": \"SUCCEEDED\",\n        \"createdAt\": \"2026-07-17T00:09:06.879Z\"\n      },\n      {\n        \"id\": \"6379d75f-6e13-480a-9f4c-c78badef72ec\",\n        \"rentalRequestId\": \"665f36fe-5fbc-464e-b6b0-16cd802d7267\",\n        \"amount\": \"1200\",\n        \"status\": \"SUCCEEDED\",\n        \"createdAt\": \"2026-07-17T15:13:37.637Z\"\n      }\n    ]\n  }\n}\n\n ```\n\n**Response Data Includes**\n\n- `id` — Unique payment identifier\n    \n- `rentalRequestId` — Associated rental request ID\n    \n- `amount` — Payment amount\n    \n- `status` — Payment status\n    \n- `createdAt` — Payment creation date\n    \n\n**Payment Status**\n\n- `SUCCEEDED` — Payment completed successfully\n    \n- `FAILED` — Payment failed or checkout session expired\n    \n\n**Notes**\n\n- Access control is handled through the authentication middleware.\n    \n- Returned payments are filtered automatically based on the authenticated user's role.\n    \n- Admins have access to the complete payment history."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Pyment details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rentnest}}/api/payments/6379d75f-6e13-480a-9f4c-c78badef72ec",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "6379d75f-6e13-480a-9f4c-c78badef72ec"
+              ]
+            },
+            "description": "### Get Single Payment Details\n\nRetrieves detailed information about a specific payment using the payment ID. This endpoint provides complete payment details, including Stripe transaction information and payment status.\n\n**Request URL**\n\n``` http\nGET /api/payments/:id\n\n ```\n\n**Route Parameter**\n\n| Parameter | Type | Description |\n| --- | --- | --- |\n| `id` | string | Unique identifier of the payment |\n\n**Example Request**\n\n``` http\nGET /api/payments/6379d75f-6e13-480a-9f4c-c78badef72ec\n\n ```\n\n**Response Example**\n\n``` json\n{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Payment Details Retrieved Success\",\n  \"data\": {\n    \"id\": \"6379d75f-6e13-480a-9f4c-c78badef72ec\",\n    \"rentalRequestId\": \"665f36fe-5fbc-464e-b6b0-16cd802d7267\",\n    \"stripePaymentIntentId\": \"pi_3TuDSGIMPphce6Pd1pR38PaM\",\n    \"stripeCustomerId\": \"cus_Uu1UqGKctYEjop\",\n    \"amount\": \"1200\",\n    \"currency\": \"usd\",\n    \"paymentMethod\": \"card\",\n    \"paidAt\": \"2026-07-17T15:13:00.000Z\",\n    \"status\": \"SUCCEEDED\",\n    \"createdAt\": \"2026-07-17T15:13:37.637Z\",\n    \"updatedAt\": \"2026-07-17T15:13:37.637Z\"\n  }\n}\n\n ```\n\n**Response Data Includes**\n\n- `id` — Unique payment identifier\n    \n- `rentalRequestId` — Associated rental request ID\n    \n- `stripePaymentIntentId` — Stripe payment intent reference\n    \n- `stripeCustomerId` — Stripe customer reference\n    \n- `amount` — Paid amount\n    \n- `currency` — Payment currency\n    \n- `paymentMethod` — Payment method used\n    \n- `paidAt` — Payment completion time\n    \n- `status` — Current payment status\n    \n- `createdAt` — Payment creation timestamp\n    \n- `updatedAt` — Last update timestamp\n    \n\n**Notes**\n\n- The payment ID must be provided as a route parameter.\n    \n- Access control is handled through the authentication middleware.\n    \n- Users can only access payment details according to their assigned role permissions."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Review",
+      "item": [
+        {
+          "name": "Create review",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"propertyId\": \"6d028bb7-b8ea-455a-abf5-7dadb31eba56\", \r\n    \"rating\": 4,\r\n    \"comment\": \"All is good and works perfectly\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentnest}}/api/reviews",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "reviews"
+              ]
+            },
+            "description": "### Create Property Review\n\nAllows a tenant to submit a review for a property after completing a successful rental payment. Tenants can provide a rating and optional comment about their rental experience.\n\n**Request URL**\n\n``` http\nPOST /api/reviews\n\n ```\n\n**Request Body (JSON)**\n\n``` json\n{\n  \"propertyId\": \"2cea68c0-c4e0-42d5-ae82-2061680da01e\",\n  \"rating\": 4,\n  \"comment\": \"Dummy Comment\"\n}\n\n ```\n\n**Data Format**\n\n``` typescript\n{\n  propertyId: string;\n  rating: number;\n  comment: string;\n}\n\n ```\n\n**Required Fields**\n\n- `propertyId` (string) — ID of the reviewed property\n    \n- `rating` (number) — Rating value for the property\n    \n- `comment` (string) — Review description\n    \n\n**Review Rules**\n\n- Only tenants with a successful payment can submit a review.\n    \n- A tenant can review only properties they have rented.\n    \n- `tenantId` is automatically identified from the authenticated user.\n    \n\n**Response Example**\n\n``` json\n{\n  \"success\": true,\n  \"statusCode\": 201,\n  \"message\": \"Review created successfully\",\n  \"data\": {\n    \"review\": {\n      \"id\": \"a12b34cd-5678-90ef-gh12-345678ijkl90\",\n      \"propertyId\": \"2cea68c0-c4e0-42d5-ae82-2061680da01e\",\n      \"rating\": 4,\n      \"comment\": \"Dummy Comment\",\n      \"createdAt\": \"2026-07-22T10:30:00.000Z\"\n    }\n  }\n}\n\n ```\n\n**Notes**\n\n- Authentication is handled through the auth middleware.\n    \n- Review creation is restricted to tenants with completed payments."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rentnest}}/api/admin/users",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users"
+              ]
+            },
+            "description": "### Get All Users (Admin)\n\nRetrieves all registered users from the RentNest system. This endpoint is accessible only by admins and provides complete user information including role, account status, and profile details.\n\n**Request URL**\n\n``` http\nGET /api/admin/users\n\n ```\n\n**Response Example**\n\n``` json\n{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Users Retrieved Successfully\",\n  \"data\": {\n    \"allUsers\": [\n      {\n        \"id\": \"9a6ee824-7889-4f51-b680-816805de3eb7\",\n        \"name\": \"Jabbar\",\n        \"email\": \"Jabbar@gmail.com\",\n        \"phone\": \"+8801701010101\",\n        \"role\": \"TENANT\",\n        \"occupation\": null,\n        \"age\": null,\n        \"profileImage\": null,\n        \"country\": null,\n        \"state\": null,\n        \"stripeCustomerId\": null,\n        \"status\": \"UNBAN\",\n        \"createdAt\": \"2026-07-22T07:57:35.865Z\",\n        \"updatedAt\": \"2026-07-22T07:57:35.865Z\"\n      }\n    ]\n  }\n}\n\n ```\n\n**Response Data Includes**\n\n- `id` — Unique user identifier\n    \n- `name` — User name\n    \n- `email` — User email address\n    \n- `phone` — Contact number\n    \n- `role` — User role (`ADMIN`, `LANDLORD`, `TENANT`)\n    \n- `occupation` — User profession\n    \n- `age` — User age\n    \n- `profileImage` — Profile image URL\n    \n- `country` — User country\n    \n- `state` — User state/division\n    \n- `stripeCustomerId` — Stripe customer reference (if available)\n    \n- `status` — Account status (`UNBAN` / `BAN`)\n    \n- `createdAt` — Account creation timestamp\n    \n- `updatedAt` — Last update timestamp\n    \n\n**Notes**\n\n- Only admins can access this endpoint.\n    \n- Authentication and admin authorization are handled through the middleware.\n    \n- Returns all users including tenants, landlords, and admins."
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Status",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\": \"BAN\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{rentnest}}/api/admin/users/ef738e27-ee0e-49ee-968d-818e2d58b58c",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users",
+                "ef738e27-ee0e-49ee-968d-818e2d58b58c"
+              ]
+            },
+            "description": "### Update User Status (Admin)\n\nAllows an admin to update the account status of a user. Admins can ban or unban users by providing the user ID as a route parameter.\n\n**Request URL**\n\n``` http\nPATCH /api/admin/users/:id\n\n ```\n\n**Route Parameter**\n\n| Parameter | Type | Description |\n| --- | --- | --- |\n| `id` | string | Unique identifier of the user whose status will be updated |\n\n**Example Request**\n\n``` http\nPATCH /api/admin/users/ef738e27-ee0e-49ee-968d-818e2d58b58c\n\n ```\n\n**Request Body (JSON)**\n\n``` json\n{\n  \"status\": \"BAN\"\n}\n\n ```\n\n**Data Format**\n\n``` typescript\n{\n  status: \"BAN\" | \"UNBAN\";\n}\n\n ```\n\n**Allowed Values**\n\n- `BAN` — Restricts the user's account access\n    \n- `UNBAN` — Restores the user's account access\n    \n\n**Response Example**\n\n``` json\n{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"User status updated successfully\",\n  \"data\": {\n    \"id\": \"ef738e27-ee0e-49ee-968d-818e2d58b58c\",\n    \"status\": \"BAN\"\n  }\n}\n\n ```\n\n**Notes**\n\n- Only admins can update user status.\n    \n- User ID must be provided as a route parameter.\n    \n- Authentication and admin authorization are handled through the middleware."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rentnest}}/api/admin/properties",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "properties"
+              ]
+            },
+            "description": "### Get All Properties (Admin)\n\nRetrieves all property listings from the RentNest system. This endpoint allows admins to view all properties created by landlords along with rented property details.\n\n**Request URL**\n\n``` http\nGET /api/admin/properties\n\n ```\n\n**Response Example**\n\n``` json\n{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Properties Retrieved Successfully\",\n  \"data\": {\n    \"allProperties\": [\n      {\n                \"id\": \"c417512a-f383-477c-a321-c6ee12d61f41\",\n                \"landlordId\": \"20ac96ec-a71f-4a24-8d41-352bea685ccb\",\n                \"categoryId\": \"bf40ff68-0e57-40ce-a6c4-3f5900b2e6d0\",\n                \"title\": \"Storage Warehouse\",\n                \"description\": \"Industrial warehouse suitable for storage and logistics operations.\",\n                \"rent\": \"1200\",\n                \"bedrooms\": 0,\n                \"bathrooms\": 2,\n                \"area\": \"4000\",\n                \"gMapLocation\": \"https://maps.google.com/?q=Gazipur\",\n                \"address\": \"Industrial Area, Gazipur\",\n                \"city\": \"Rajshashi\",\n                \"division\": \"Rajshashi\",\n                \"country\": \"Bangladesh\",\n                \"status\": \"RENTED\",\n                \"rentalType\": \"MONTHLY\",\n                \"availableRentalPeriodMonth\": 8,\n                \"isDeleted\": false,\n                \"deletedAt\": null,\n                \"createdAt\": \"2026-07-19T10:28:25.134Z\",\n                \"updatedAt\": \"2026-07-22T15:54:13.159Z\"\n      }\n    ]\n  }\n}\n\n ```\n\n**Notes**\n\n- Only admins can access this endpoint.\n    \n- Returns all properties from all landlords.\n    \n- Authentication and admin authorization are handled through the middleware."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Rental Requests",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rentnest}}/api/admin/rentals",
+              "host": [
+                "{{rentnest}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "rentals"
+              ]
+            },
+            "description": "### Get All Rental Requests (Admin)\n\nRetrieves all rental requests from the RentNest system. This endpoint allows admins to monitor all rental requests submitted by tenants across all properties.\n\n**Request URL**\n\n``` http\nGET /api/admin/rentals\n\n ```\n\n**Response Example**\n\n``` json\n{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"All Rental Request Retrieved Successfully\",\n  \"data\": {\n    \"rentalRequests\": [\n      {\n        \"id\": \"b0ba75e1-d3a4-4a4a-98ca-e78168a632a0\",\n        \"status\": \"APPROVED\",\n        \"message\": \"Rental message for rent property\",\n        \"askingRentMonth\": 6,\n        \"moveInDate\": null,\n        \"propertyId\": \"52f773ed-d6ee-42cd-a3b1-c40c218caa9c\",\n        \"tenantId\": \"b72131d6-9882-4483-a7ff-ee16d914ee25\",\n        \"createdAt\": \"2026-07-22T16:05:49.640Z\"\n      },\n      {\n        \"id\": \"817dd991-f2b0-48ee-9056-91df7c254d19\",\n        \"status\": \"APPROVED\",\n        \"message\": \"Rental message for rent property\",\n        \"askingRentMonth\": 6,\n        \"moveInDate\": null,\n        \"propertyId\": \"c417512a-f383-477c-a321-c6ee12d61f41\",\n        \"tenantId\": \"505330bf-5669-40e0-ac39-b703e8bb66a6\",\n        \"createdAt\": \"2026-07-22T14:29:51.327Z\"\n      }\n    ]\n  }\n}\n\n ```\n\n**Response Data Includes**\n\n- `id` — Unique rental request identifier\n    \n- `status` — Current rental request status\n    \n    - `PENDING`\n        \n    - `APPROVED`\n        \n    - `REJECTED`\n        \n- `message` — Tenant's rental request message\n    \n- `askingRentMonth` — Requested rental duration in months\n    \n- `moveInDate` — Expected move-in date\n    \n- `propertyId` — Associated property identifier\n    \n- `tenantId` — Tenant who submitted the request\n    \n- `createdAt` — Request creation timestamp\n    \n\n**Notes**\n\n- Only admins can access this endpoint.\n    \n- Returns rental requests from all tenants and properties.\n    \n- Authentication and admin authorization are handled through the middleware."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "rentnest",
+      "value": ""
+    },
+    {
+      "key": "id",
+      "value": ""
+    }
+  ]
+}

@@ -4,6 +4,8 @@ A modern rental property management backend built with **Node.js**, **Express**,
 
 RentNest simplifies the rental process by allowing landlords to list properties, tenants to submit rental requests, and both parties to securely complete payments through Stripe Checkout.
 
+## Live URL: https://rent-nest-blond.vercel.app
+
 ---
 
 ## ✨ Features
@@ -217,7 +219,6 @@ npm start
 ```
 
 ---
-
 
 # API Features
 
